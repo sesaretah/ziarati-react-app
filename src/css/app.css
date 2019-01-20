@@ -1,0 +1,259 @@
+/* Your app styles here */
+@font-face {
+  font-family: 'iransans';
+  src:    url(../fonts/IRANSansWeb.eot);
+  src:  url(../fonts/IRANSansWeb.eot) format('embedded-opentype'),
+  url(../fonts/IRANSansWeb.woff) format('woff'),
+  url(../fonts/IRANSansWeb.ttf) format('truetype');
+}
+.ios body {
+  font-family: iransans;
+}
+
+.custom-file-input
+{
+  display: inline-block;
+  position: relative;
+  color: #FFFFFF;
+}
+.custom-file-input input
+{
+  visibility: hidden;
+}
+.custom-file-input:before
+{
+  content: '\f030  seleccionar';
+  font-family: FontAwesome;
+  display: block;
+  background: -webkit-linear-gradient( -180deg, #007AFF, #007AFF);
+  background: -o-linear-gradient( -180deg, #007AFF, #007AFF);
+  background: -moz-linear-gradient( -180deg, #007AFF, #007AFF);
+  background: linear-gradient( -180deg, #007AFF, #007AFF);
+  border: 3px solid #007AFF;
+  border-radius: 10px;
+  padding: 5px 0px;
+  width: 40%;
+  outline: none;
+  white-space: nowrap;
+  cursor: pointer;
+  text-align: center;
+  font-size: 12pt;
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+.custom-file-input:hover:before
+{
+  border-color: #007AFF;
+}
+.custom-file-input:active:before
+{
+  background: #007AFF;
+}
+
+.demo-card-header-pic .card-header {
+  height: 25vw;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+}
+.demo-card-header-pic .card-content-padding .date{
+  color: #8e8e93;
+}
+.card-content {
+  width: 32vw;
+}
+.col-center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ios .toolbar:after {
+  height: 0px !important;
+}
+
+.ios .tabbar-labels.toolbar-bottom-md {
+  height: 46px;
+}
+
+.ios .tabbar-labels.toolbar-bottom-md a.tab-link, .ios .tabbar-labels.toolbar-bottom-md a.link {
+  padding-top: 12px;
+  padding-bottom: 7px;
+}
+
+.ios .list input[type="text"], .ios .list input[type="password"], .ios .list input[type="search"], .ios .list input[type="email"], .ios .list input[type="tel"], .ios .list input[type="url"], .ios .list input[type="date"], .ios .list input[type="datetime-local"], .ios .list input[type="time"], .ios .list input[type="number"], .ios .list select {
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.ios .item-label, .ios .item-floating-label {
+  margin-bottom: 10px;
+}
+
+.ios .toolbar:not(.messagebar).color-blue {
+  background: #65696b;
+}
+
+.gray {
+  background-color: #ececec !important;
+}
+
+.ios .list textarea {
+  padding-right: 10px;
+}
+
+
+.icon-3 {
+  vertical-align: -3px;
+}
+
+.image-upload  {
+  padding-top: 10px;
+  padding-right: 20px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.image-upload > input
+{
+  display: none;
+}
+
+.image-upload img
+{
+  width: 80px;
+  cursor: pointer;
+}
+
+.w-100 {
+  width: 100px;
+}
+
+.thumb img {
+  border: 1px solid #ddd; /* Gray border */
+  border-radius: 4px;  /* Rounded border */
+  padding: 5px; /* Some padding */
+  width: 100px; /* Set a small width */
+}
+
+/* Add a hover effect (blue shadow) */
+.thumb img:hover {
+  box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+}
+
+/*
+.ios .list ul:after {
+background-color: inherit !important;
+}*/
+
+.ios .item-label, .ios .item-floating-label {
+  line-height: 15px !important;
+}
+
+.pr-20 {
+  /*padding-right: 20px;*/
+}
+
+.ios .block-title {
+  line-height: 18px;
+  font-weight: 700;
+}
+
+.logo {
+  width: 30px;
+  float: left;
+}
+
+.title {
+  left: auto !important;
+}
+
+.ios .tabbar a, .ios .tabbar-labels a {
+  color: #ffffff;
+}
+
+
+.ios .navbar {
+  background: #366a9c;
+}
+
+.ios .toolbar:not(.messagebar).color-blue {
+  background: #366a9c;
+}
+
+.searchbar {
+  width: 90%;
+  background: #366a9c !important;
+}
+.price {
+  float: left;
+}
+
+.swiper-slide {
+  text-align: center;
+}
+
+.ltr {
+  direction: ltr;
+}
+
+.swiper-container {
+  background-color: #fff;
+}
+
+.ios .searchbar:after {
+  background-color: #366a9c;
+}
+
+.ios .navbar {
+  height: 50px;
+}
+
+input:focus ~ .floating-label,
+input:not(:focus):valid ~ .floating-label{
+  top: 8px;
+  bottom: 10px;
+  left: 20px;
+  font-size: 11px;
+  opacity: 1;
+}
+
+.inputText {
+  font-size: 14px;
+  width: 200px;
+  height: 35px;
+}
+
+.floating-label {
+  position: absolute;
+  pointer-events: none;
+  left: 20px;
+  top: 18px;
+  transition: 0.2s ease all;
+}
+
+.center {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+
+.item-input-wrap textarea {
+  border: 1px solid #bfbfbf;
+}
+
+.item-input-wrap input[type="text"] {
+  border: 1px solid #bfbfbf;
+}
+
+.pb-10 {
+  padding-bottom: 10px;
+}
+
+.pl-10 {
+  padding-left: 10px;
+}
+
+.mb-10 {
+  margin-bottom: 10px; 
+}
