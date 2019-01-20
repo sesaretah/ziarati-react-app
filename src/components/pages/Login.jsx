@@ -21,11 +21,13 @@ import {
   CardFooter,
   BlockFooter,
   LoginScreenTitle,
-  ListButton
+  ListButton,
+  Segmented
 } from 'framework7-react';
 
 import * as MyActions from "../../actions/MyActions";
 import UserStore from "../../stores/UserStore";
+import MyStore from "../../stores/MyStore";
 import { dict} from '../Dict';
 import logo from  "../../images/logo.png";
 
@@ -34,7 +36,9 @@ export default class Login extends React.Component {
     super(props);
     this.logged_in = this.logged_in.bind(this);
     this.not_logged_in = this.not_logged_in.bind(this);
+    this.getAdvertisements = this.getAdvertisements.bind(this);
     this.state = {
+      advertisements: [],
       token: localStorage.getItem('token'),
       username: '',
       password: '',
@@ -42,13 +46,26 @@ export default class Login extends React.Component {
   }
 
   componentWillMount() {
+    MyStore.on("change", this.getAdvertisements);
     UserStore.on("logged_in", this.logged_in);
     UserStore.on("not_logged_in", this.not_logged_in);
   }
 
   componentWillUnmount() {
+    MyStore.removeListener("change", this.getAdvertisements);
     UserStore.removeListener("logged_in", this.logged_in);
     UserStore.removeListener("not_logged_in", this.not_logged_in);
+  }
+
+  componentDidMount(){
+    //  console.log('Mounted');
+    MyActions.getMyAdvertisements(this.state);
+  }
+
+  getAdvertisements() {
+    this.setState({
+      advertisements: MyStore.getAll(),
+    });
   }
 
   logged_in() {
@@ -94,62 +111,94 @@ export default class Login extends React.Component {
     localStorage.removeItem('token');
     /*
     window.plugins.toast.showWithOptions({
-      message: 'خروج موفق',
-      duration: "short", // 2000 ms
-      position: "bottom",
-      styling: {
-        opacity: 0.75, // 0.0 (transparent) to 1.0 (opaque). Default 0.8
-        textSize: 20.5, // Default is approx. 13.
-        cornerRadius: 16, // minimum is 0 (square). iOS default 20, Android default 100
-        horizontalPadding: 20, // iOS default 16, Android default 50
-        verticalPadding: 16 // iOS default 12, Android default 30
-      }
+    message: 'خروج موفق',
+    duration: "short", // 2000 ms
+    position: "bottom",
+    styling: {
+    opacity: 0.75, // 0.0 (transparent) to 1.0 (opaque). Default 0.8
+    textSize: 20.5, // Default is approx. 13.
+    cornerRadius: 16, // minimum is 0 (square). iOS default 20, Android default 100
+    horizontalPadding: 20, // iOS default 16, Android default 50
+    verticalPadding: 16 // iOS default 12, Android default 30
+    }
     });*/
   }
 
   LoginContent() {
     return (
       <React.Fragment>
-    <LoginScreenTitle>{dict.login}</LoginScreenTitle>
-    <List form>
-      <ListInput
-        label=''
-        type="text"
-        placeholder={dict.username}
-        value={this.state.username}
-        onInput={(e) => {
-          this.setState({ username: e.target.value});
-        }}
-        />
-      <ListInput
-        label=''
-        type="password"
-        placeholder={dict.password}
-        value={this.state.password}
-        onInput={(e) => {
-          this.setState({ password: e.target.value});
-        }}
-        />
-    </List>
-    <List>
-      <Block>
-        <Button raised big fill  onClick={this.signIn.bind(this)}>{dict.sign_in}</Button>
-      </Block>
-      <br />
-      <span> {dict.signed_up_already} </span>
-      <Link href="/sign_up/">{dict.sign_up}</Link>
-    </List>
-  </React.Fragment>
-  );
+        <LoginScreenTitle>{dict.login}</LoginScreenTitle>
+        <List form>
+          <ListInput
+            label=''
+            type="text"
+            placeholder={dict.username}
+            value={this.state.username}
+            onInput={(e) => {
+              this.setState({ username: e.target.value});
+            }}
+            />
+          <ListInput
+            label=''
+            type="password"
+            placeholder={dict.password}
+            value={this.state.password}
+            onInput={(e) => {
+              this.setState({ password: e.target.value});
+            }}
+            />
+        </List>
+        <List>
+          <Block>
+            <Button raised big fill  onClick={this.signIn.bind(this)}>{dict.sign_in}</Button>
+          </Block>
+          <br />
+          <span> {dict.signed_up_already} </span>
+          <Link href="/sign_up/">{dict.sign_up}</Link>
+        </List>
+      </React.Fragment>
+    );
   }
 
   SignOutContent() {
     return (
-    <List>
-      <Block>
-      <Button raised big fill color="red" onClick={this.signOut.bind(this)}>{dict.sign_out}</Button>
+      <React.Fragment>
+        <List>
+          <Block>
+            <Button raised big fill color="red" onClick={this.signOut.bind(this)}>{dict.sign_out}</Button>
+          </Block>
+        </List>
+        <Block>
+        <List mediaList>
+          {this.createItem()}
+        </List>
       </Block>
-    </List>);
+      </React.Fragment>
+
+    );
+  }
+
+
+  deleteAd(id) {
+    MyActions.deleteAdvertisement(id, this.state.token);
+  }
+
+  createItem(){
+    var length = this.state.advertisements.length;
+    let items = []
+    for (let i = 0; i < length; i++) {
+      items.push(
+        <ListItem title={this.state.advertisements[i].title}>
+          <Segmented raised tag="p">
+            <Button  href={'/adverts/' + this.state.advertisements[i].id} >{dict.view}</Button>
+            <Button  color="gray" href={'/edit_advert/' + this.state.advertisements[i].id} >{dict.edit}</Button>
+            <Button color="red"  onClick={() => {if (window.confirm('آیا مطمئن هستید؟ ')) this.deleteAd(this.state.advertisements[i].id)}}>{dict.delete}</Button>
+          </Segmented>
+
+        </ListItem>
+      );
+    }
+    return items
   }
 
   UserContent() {

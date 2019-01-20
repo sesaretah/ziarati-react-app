@@ -11,7 +11,7 @@ import SignUp from './components/pages/SignUp';
 import AdvertShow from './components/pages/AdvertShow';
 import NewAdvert from './components/pages/NewAdvert';
 import NewCamAdvert from './components/pages/NewCamAdvert';
-
+import EditCamAdvert from './components/pages/EditCamAdvert';
 
 export default [
   {
@@ -45,6 +45,10 @@ export default [
   {
     path: '/new_cam_advert/',
     component: NewCamAdvert,
+  },
+  {
+    path: '/edit_advert/:advertId',
+    component: EditCamAdvert,
   },
   {
     path: '/dynamic-route/blog/:blogId/post/:postId/',

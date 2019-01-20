@@ -36,6 +36,14 @@ class MyStore extends EventEmitter {
     this.emit("load");
   }
 
+  deleteAdvertisement(advertisements){
+    this.advertisements = [];
+    for (var i = 0, len = advertisements.length; i < len; ++i) {
+      this.advertisements.push(advertisements[i]);
+    }
+    this.emit("change");
+  }
+
   showAdvertisement(advertisement){
     this.advertisements = [];
     this.advertisements.push(advertisement);
@@ -68,9 +76,15 @@ class MyStore extends EventEmitter {
         this.showAdvertisement(action.advertisement);
         break;
       }
+
+      case "DELETE_ADVERTISEMENT": {
+        this.deleteAdvertisement(action.advertisements);
+        break;
+      }
     }
   }
 
+DELETE_ADVERTISEMENT
 }
 
 const myStore = new MyStore;

@@ -1,7 +1,7 @@
 import dispatcher from "../dispatcher";
 import axios from 'axios';
-//const server='http://localhost:3000/api';
-const server='http://sanatik.ir/api';
+const server='http://localhost:3000/api';
+//const server='http://sanatik.ir/api';
 
 export function createTodo(text) {
   dispatcher.dispatch({
@@ -126,6 +126,36 @@ export function getAdvertisements(data) {
     console.log(error);
   });
 }
+
+export function getMyAdvertisements(data) {
+  axios.get(server + '/my_advertisements', { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + data.token }})
+  .then(function (response) {
+    console.log(response);
+    dispatcher.dispatch({
+      type: "SHOW_ADVERTISEMENTS",
+      advertisements: response.data,
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function deleteAdvertisement(id, token) {
+  axios.get(server + '/delete_advertisement/' + id, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token }})
+  .then(function (response) {
+    console.log(response);
+    dispatcher.dispatch({
+      type: "DELETE_ADVERTISEMENT",
+      advertisements: response.data,
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+
 
 export function loadAdvertisements(data) {
   axios.get(server + '/advertisements?page='+data.page)

@@ -27,4 +27,7 @@ export const dict = {
   'contact_information':'اطلاعات تماس ',
   'search': 'جستجو ',
   'cancel' : 'بیخیال',
+  'view': 'نمایش',
+  'edit': 'ویرایش',
+  'delete': 'حذف'
 };
