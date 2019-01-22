@@ -186,13 +186,13 @@ export default class NewCamAdvert extends Component {
   }
 
   submit() {
-    if (this.state.title && this.state.content) {
+    if (this.state.title && this.state.content && this.state.phone_number) {
     MyActions.createAdvertisement(this.state);
   } else {
     const self = this;
     const app = self.$f7;
     const router = self.$f7router;
-    app.dialog.alert('عنوان و متن آگهی نباید خالی باشد', dict.error, () => {
+    app.dialog.alert(dict.adverts_nes, dict.error, () => {
 
     });
   }
@@ -232,7 +232,7 @@ export default class NewCamAdvert extends Component {
 
           <ListInput
             label={dict.phone_number}
-            type="text"
+            type="tel"
             maxlength="70"
             placeholder= {dict.phone_number_content}
             value={this.state.phone_number}

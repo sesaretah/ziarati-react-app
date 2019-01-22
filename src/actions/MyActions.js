@@ -45,6 +45,69 @@ export function createAdvertisement(data) {
   });
 }
 
+export function editAdvertisement(data) {
+  console.log(data);
+  axios.post(server + '/edit_advertisement', JSON.stringify(data), { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + data.token } })
+  .then(function (response) {
+    dispatcher.dispatch({
+      type: "EDIT_ADVERTISEMENT",
+      advertisement: response.data,
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function createMessage(text, id ,token, room) {
+  var data = {content: text, room_id: room}
+  axios.post(server + '/new_message/'+id, JSON.stringify(data), { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
+  .then(function (response) {
+    if (response.data.message) {
+      dispatcher.dispatch({
+        type: "NEW_MESSAGE",
+        message: response.data.message,
+      });
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+
+export function getMessages(id ,token, room) {
+  axios.get(server + '/messages/'+id+'?room_id='+room, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
+  .then(function (response) {
+    if (response.data.messages) {
+      dispatcher.dispatch({
+        type: "ROOM_MESSAGES",
+        messages: response.data,
+      });
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function groupedMessages(token) {
+  axios.get(server + '/grouped_messages', { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
+  .then(function (response) {
+    if (response.data.result) {
+      console.log(response);
+      dispatcher.dispatch({
+        type: "GROUP_MESSAGES",
+        groups: response.data,
+      });
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+
 export function createTourPackage(data) {
   var form_data = new FormData();
 
@@ -127,6 +190,98 @@ export function getAdvertisements(data) {
   });
 }
 
+export function makePin(id, device, token) {
+  axios.get(server + '/make_pin/'+id+'?device_id='+device,  { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token }})
+  .then(function (response) {
+    console.log(response);
+    dispatcher.dispatch({
+      type: "CREATE_PIN",
+      pin: response.data,
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function unPin(id, device, token) {
+  axios.get(server + '/unpin/'+id+'?device_id='+device,  { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token }})
+  .then(function (response) {
+    if (response.data.result){
+      dispatcher.dispatch({
+        type: "UNPINNED",
+        pin: response.data,
+      });
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function pinned(id, device, token) {
+  axios.get(server + '/pinned/'+id+'?device_id='+device,  { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token }})
+  .then(function (response) {
+    //console.log(response);
+    if (response.data.result){
+      dispatcher.dispatch({
+        type: "CREATE_PIN",
+        pin: response.data,
+      });
+    }
+
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function liked(id, device, token) {
+  axios.get(server + '/liked/'+id+'?device_id='+device,  { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token }})
+  .then(function (response) {
+    if (response.data.result){
+      dispatcher.dispatch({
+        type: "LIKE",
+        likes: response.data.likes,
+      });
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function like(id, device, token) {
+  axios.get(server + '/like/'+id+'?device_id='+device,  { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token }})
+  .then(function (response) {
+    if (response.data.result){
+      dispatcher.dispatch({
+        type: "LIKE",
+        likes: response.data.likes,
+      });
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function dislike(id, device, token) {
+  axios.get(server + '/dislike/'+id+'?device_id='+device,  { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token }})
+  .then(function (response) {
+    if (response.data.result){
+      dispatcher.dispatch({
+        type: "DISLIKE",
+        likes: response.data.likes,
+      });
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+
 export function getMyAdvertisements(data) {
   axios.get(server + '/my_advertisements', { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + data.token }})
   .then(function (response) {
@@ -154,6 +309,22 @@ export function deleteAdvertisement(id, token) {
     console.log(error);
   });
 }
+
+export function deletePhoto(id, token) {
+  axios.get(server + '/delete_photo/' + id, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token }})
+  .then(function (response) {
+    console.log(response);
+    dispatcher.dispatch({
+      type: "DELETE_PHOTO",
+      photos: response.data,
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+
 
 
 

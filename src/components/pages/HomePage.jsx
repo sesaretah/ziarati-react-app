@@ -38,7 +38,7 @@ export default class HomePage extends React.Component {
   constructor() {
     super();
     this.getAdvertisements = this.getAdvertisements.bind(this);
-    //this.slide = this.slide.bind(this);
+    this.onBackKeyDown = this.onBackKeyDown.bind(this);
     this.state = {
       advertisements: MyStore.getAll(),
       query: '',
@@ -59,8 +59,21 @@ export default class HomePage extends React.Component {
   }
 
   componentDidMount(){
-    //  console.log('Mounted');
+    document.addEventListener('backbutton', this.onBackKeyDown, false);
     MyActions.getAdvertisements(this.state);
+  }
+
+  onBackKeyDown() {
+    const self = this;
+    const app = self.$f7;
+    const router = self.$f7router;
+    if (router.url == '/') {
+      console.log('Exiting');
+      navigator.app.exitApp();
+      navigator.device.exitApp();
+    } else {
+      router.navigate('/');
+    }
   }
 
   getAdvertisements() {
@@ -138,6 +151,7 @@ export default class HomePage extends React.Component {
 
 
   render() {
+    console.log(this.$f7route);
     const { advertisements } = this.state;
 
     const AdvertisementsComponents = function () {

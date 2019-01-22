@@ -24,11 +24,14 @@ import './css/app.css';
 Framework7.use(Framework7React);
 
 const startApp = () => {
-ReactDOM.render(
-  React.createElement(App),
-  document.getElementById('app'),
-);
+  ReactDOM.render(
+    React.createElement(App),
+    document.getElementById('app'),
+  );
 }
+
+
+
 
 if(!window.cordova) {
   startApp()

@@ -109,19 +109,6 @@ export default class Login extends React.Component {
     const router = self.$f7router;
     this.setState({ token: null});
     localStorage.removeItem('token');
-    /*
-    window.plugins.toast.showWithOptions({
-    message: 'خروج موفق',
-    duration: "short", // 2000 ms
-    position: "bottom",
-    styling: {
-    opacity: 0.75, // 0.0 (transparent) to 1.0 (opaque). Default 0.8
-    textSize: 20.5, // Default is approx. 13.
-    cornerRadius: 16, // minimum is 0 (square). iOS default 20, Android default 100
-    horizontalPadding: 20, // iOS default 16, Android default 50
-    verticalPadding: 16 // iOS default 12, Android default 30
-    }
-    });*/
   }
 
   LoginContent() {
@@ -131,7 +118,7 @@ export default class Login extends React.Component {
         <List form>
           <ListInput
             label=''
-            type="text"
+            type="tel"
             placeholder={dict.username}
             value={this.state.username}
             onInput={(e) => {
@@ -168,6 +155,13 @@ export default class Login extends React.Component {
             <Button raised big fill color="red" onClick={this.signOut.bind(this)}>{dict.sign_out}</Button>
           </Block>
         </List>
+
+        <List>
+  <ListItem title={dict.my_advertisements} link="#"></ListItem>
+  <ListItem title={dict.my_pins} link="#"></ListItem>
+  <ListItem title={dict.messages} link="/messages/"></ListItem>
+</List>
+
         <Block>
         <List mediaList>
           {this.createItem()}

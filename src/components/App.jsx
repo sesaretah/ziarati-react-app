@@ -33,6 +33,9 @@ export default function (props) {
     name: 'Framework7', // App name
     theme: 'ios', // Automatic theme detection
     // App routes
+    touch: {
+      disableContextMenu: false
+    },
     routes,
   };
 

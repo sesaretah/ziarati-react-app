@@ -38,8 +38,9 @@ export default class EditCamAdvert extends Component {
       website: ''
     };
     this.submit = this.submit.bind(this);
-    this.fill_profile = this.fill_profile.bind(this);
     this.getAdvertisement = this.getAdvertisement.bind(this);
+    this.getPhotos = this.getPhotos.bind(this);
+    this.editAdvertisement = this.editAdvertisement.bind(this);
 
   }
 
@@ -147,15 +148,21 @@ export default class EditCamAdvert extends Component {
 
   componentWillMount() {
     MyStore.on("show_advertisement", this.getAdvertisement);
+    MyStore.on("edit_advertisement", this.editAdvertisement);
+    MyStore.on("change_photos", this.getPhotos);
   }
 
   componentWillUnmount() {
     MyStore.removeListener("show_advertisement", this.getAdvertisement);
+    MyStore.removeListener("edit_advertisement", this.editAdvertisement);
+    MyStore.removeListener("change_photos", this.getPhotos);
   }
 
   getAdvertisement() {
     var advertisements = MyStore.getAll();
+    console.log(advertisements[0]);
     this.setState({
+      id: advertisements[0].id,
       title: advertisements[0].title,
       content: advertisements[0].content,
       photos: advertisements[0].photos,
@@ -170,43 +177,63 @@ export default class EditCamAdvert extends Component {
     });
   }
 
+  editAdvertisement() {
+    var advertisements = MyStore.getAll();
+    const self = this;
+    const app = self.$f7;
+    const router = self.$f7router;
+    router.navigate('/adverts/'+advertisements[0].id);
+  }
+
   images(){
     var items = []
     for (let i = 0; i < this.state.thumbs.length; i++) {
       items.push(
         <div class='w-100'>
-        <img src={this.state.thumbs[i]} className="thumb" alt="picture" />
-        <Progressbar progress={this.state.progress[i]} id="demo-inline-progressbar" class='center'></Progressbar>
+          <img src={this.state.thumbs[i]} className="thumb" alt="picture" />
+          <Progressbar progress={this.state.progress[i]} id="demo-inline-progressbar" class='center'></Progressbar>
         </div>
-    );
+      );
     }
     return items
   }
 
-  fill_profile() {
-    var profile = ProfileStore.getProfile();
+  deletePhoto(id){
+    MyActions.deletePhoto(id, this.state.token);
+  }
+
+  photos() {
+    var items = []
+    for (let i = 0; i < this.state.photos.length; i++) {
+      items.push(
+        <div class='w-100'>
+          <img src={this.state.photos[i].url} className="thumb" alt="picture" />
+          <Button fill color="red" onClick={() => {if (window.confirm('آیا مطمئن هستید؟ ')) this.deletePhoto(this.state.photos[i].id)}}>{dict.delete}</Button>
+        </div>
+      );
+    }
+    return items
+  }
+
+  getPhotos(){
+    var photos = MyStore.getPhotos();
+    console.log();
     this.setState({
-      phone_number: profile.phone_number,
-      address: profile.address,
-      city: profile.city,
-      email: profile.email,
-      telegram_channel: profile.telegram_channel,
-      instagram_page: profile.instagram_page,
-      website: profile.website
+      photos: photos
     });
   }
 
   submit() {
-    if (this.state.title && this.state.content) {
-    MyActions.createAdvertisement(this.state);
-  } else {
-    const self = this;
-    const app = self.$f7;
-    const router = self.$f7router;
-    app.dialog.alert('عنوان و متن آگهی نباید خالی باشد', dict.error, () => {
+    if (this.state.title && this.state.content && this.state.phone_number) {
+      MyActions.editAdvertisement(this.state);
+    } else {
+      const self = this;
+      const app = self.$f7;
+      const router = self.$f7router;
+      app.dialog.alert(dict.adverts_nes, dict.error, () => {
 
-    });
-  }
+      });
+    }
   }
 
   render() {
@@ -243,7 +270,7 @@ export default class EditCamAdvert extends Component {
 
           <ListInput
             label={dict.phone_number}
-            type="text"
+            type="tel"
             maxlength="70"
             placeholder= {dict.phone_number_content}
             value={this.state.phone_number}
@@ -305,6 +332,10 @@ export default class EditCamAdvert extends Component {
             <Button  fill color="gray"  onClick={() => this.takepic(1)}><i class="f7-icons icon-3">camera</i> {dict.upload_from_camera}</Button>
             <Button  fill color="black"  onClick={() => this.takepic(0)}><i class="f7-icons icon-3">folder</i> {dict.upload_from_gallery}</Button>
           </Segmented>
+        </Block>
+
+        <Block className="thumb" >
+          {this.photos()}
         </Block>
 
         <Block className="thumb" >

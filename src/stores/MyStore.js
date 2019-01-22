@@ -6,6 +6,8 @@ class MyStore extends EventEmitter {
   constructor() {
     super()
     this.advertisements = [];
+    this.photos= [];
+    this.likes = '';
   }
 
   createTourPackage(tourPackage) {
@@ -50,7 +52,48 @@ class MyStore extends EventEmitter {
     this.emit("show_advertisement");
   }
 
-    getAll() {
+  editAdvertisement(advertisement){
+    this.advertisements = [];
+    this.advertisements.push(advertisement);
+    this.emit("edit_advertisement");
+  }
+
+  deletePhoto(photos){
+    this.advertisements = [];
+    this.photos = [];
+    for (var i = 0, len = photos.length; i < len; ++i) {
+      this.photos.push(photos[i]);
+    }
+    this.emit("change_photos");
+  }
+
+  unpinned(pin) {
+    this.emit("unpinned");
+  }
+
+  liked(likes) {
+    this.likes = likes
+    this.emit("liked");
+  }
+
+  disliked(likes) {
+    this.likes = likes
+    this.emit("disliked");
+  }
+
+  createPin(pin){
+    this.emit("pinned");
+  }
+
+  getLikes() {
+    return this.likes
+  }
+
+  getPhotos() {
+    return this.photos;
+  }
+
+  getAll() {
     return this.advertisements;
   }
 
@@ -81,10 +124,40 @@ class MyStore extends EventEmitter {
         this.deleteAdvertisement(action.advertisements);
         break;
       }
+
+      case "EDIT_ADVERTISEMENT": {
+        this.editAdvertisement(action.advertisement);
+        break;
+      }
+
+      case "CREATE_PIN": {
+        this.createPin(action.pin);
+        break;
+      }
+
+      case "UNPINNED": {
+        this.unpinned(action.pin);
+        break;
+      }
+
+      case "LIKE": {
+        this.liked(action.likes);
+        break;
+      }
+
+      case "DISLIKE": {
+        this.disliked(action.likes);
+        break;
+      }
+
+      case "DELETE_PHOTO": {
+        this.deletePhoto(action.photos);
+        break;
+      }
     }
   }
 
-DELETE_ADVERTISEMENT
+
 }
 
 const myStore = new MyStore;

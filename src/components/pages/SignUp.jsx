@@ -94,7 +94,7 @@ export default class SignUp extends React.Component {
         <List form>
           <ListInput
             label=''
-            type="text"
+            type="tel"
             placeholder={dict.username}
             value={this.state.username}
             onInput={(e) => {

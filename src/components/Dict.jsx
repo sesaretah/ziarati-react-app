@@ -29,5 +29,12 @@ export const dict = {
   'cancel' : 'بیخیال',
   'view': 'نمایش',
   'edit': 'ویرایش',
-  'delete': 'حذف'
+  'delete': 'حذف',
+  'adverts_nes': 'عنوان، متن و شماره تلفن اجباری است',
+  'my_advertisements': 'آگهی های من',
+  'my_pins': ' نشان شده‌ها ',
+  'pin' : 'نشان کن',
+  'pinned': 'نشان شده',
+  'message_to_seller': 'ارسال پیام',
+  'messages': 'پیام ها '
 };
