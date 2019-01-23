@@ -35,40 +35,41 @@ export default class Message extends React.Component {
 
   constructor(props) {
     super(props);
-    this.getGroups = this.getGroups.bind(this)
+    this.getRooms = this.getRooms.bind(this)
 
     this.state = {
-      groups: [],
+      rooms: [],
+      advertId: this.$f7route.params['advertId'],
       token: localStorage.getItem('token'),
     };
   }
 
   componentWillMount() {
-    MessageStore.on("groups", this.getGroups);
+    MessageStore.on("rooms", this.getRooms);
   }
 
   componentWillUnmount() {
-    MessageStore.removeListener("groups", this.getGroups);
+    MessageStore.removeListener("rooms", this.getRooms);
   }
 
   componentDidMount(){
-    MyActions.groupedMessages(this.state.token);
+    MyActions.getRooms(this.state.advertId, this.state.token);
   }
 
 
-  getGroups(){
-    var groups = MessageStore.getGroups();
-    console.log(groups);
-    this.setState({groups: groups});
+  getRooms(){
+    var rooms = MessageStore.getRooms();
+    console.log(rooms);
+    this.setState({rooms: rooms});
   }
 
   createItem(){
-    var length = this.state.groups.length;
+    var length = this.state.rooms.length;
     let items = []
     for (let i = 0; i < length; i++) {
       items.push(<ListItem
-        link={'/rooms/' + this.state.groups[i].id}
-        title={this.state.groups[i].title}
+        link={'/chat/' + this.state.rooms[i].advert_id + '/room/'+this.state.rooms[i].id}
+        title={this.state.rooms[i].title}
         after=""
         subtitle=""
         text=""
@@ -96,7 +97,12 @@ export default class Message extends React.Component {
           <Link href="#tab-1"><i class="f7-icons">data</i></Link>
           <Link href="/new_cam_advert/"><i class="f7-icons">add_round</i></Link>
           <Link href="/"><i class="f7-icons">home</i></Link>
-          <Link href="/login/"><i class="f7-icons">person_round</i></Link>
+          <Link href="/login/">
+            <i class="icon f7-icons ios-only">
+              person_round
+              <span class="badge color-red"></span>
+            </i>
+          </Link>
         </Toolbar>
       </Page>
     )

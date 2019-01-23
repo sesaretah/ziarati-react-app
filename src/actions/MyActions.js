@@ -76,13 +76,13 @@ export function createMessage(text, id ,token, room) {
 }
 
 
-export function getMessages(id ,token, room) {
-  axios.get(server + '/messages/'+id+'?room_id='+room, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
+export function getMessages(id ,token, room, page) {
+  axios.get(server + '/messages/'+id+'?room_id='+room+'&page='+page, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
   .then(function (response) {
     if (response.data.messages) {
       dispatcher.dispatch({
         type: "ROOM_MESSAGES",
-        messages: response.data,
+        data: response.data,
       });
     }
   })
@@ -95,16 +95,62 @@ export function groupedMessages(token) {
   axios.get(server + '/grouped_messages', { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
   .then(function (response) {
     if (response.data.result) {
-      console.log(response);
       dispatcher.dispatch({
         type: "GROUP_MESSAGES",
-        groups: response.data,
+        data: response.data,
       });
     }
   })
   .catch(function (error) {
     console.log(error);
   });
+}
+
+export function getRooms(id, token) {
+  axios.get(server + '/rooms/'+id, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
+  .then(function (response) {
+    if (response.data.result) {
+      dispatcher.dispatch({
+        type: "ROOMS",
+        data: response.data,
+      });
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function getUserRooms(id, token) {
+  axios.get(server + '/user_advert_room/'+id, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
+  .then(function (response) {
+    if (response.data.result) {
+      dispatcher.dispatch({
+        type: "ADVERT_ROOM",
+        data: response.data,
+      });
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function roomSeen(room_id, token) {
+  if (room_id) {
+  axios.get(server + '/seen/'+room_id, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
+  .then(function (response) {
+    if (response.data.result) {
+      dispatcher.dispatch({
+        type: "SEEN",
+        data: response.data,
+      });
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
 }
 
 

@@ -51,12 +51,13 @@ export default class Chat extends React.Component {
       this.state = {
         token: localStorage.getItem('token'),
         advertId: this.$f7route.params['advertId'],
-        room_id: '',
+        room_id: this.$f7route.params['roomId'],
         attachments: [],
         sheetVisible: false,
         typingMessage: null,
         messagesData: [],
         images: [],
+        page: 1,
         people: [
           {
             name: 'Kate Johnson',
@@ -89,7 +90,7 @@ export default class Chat extends React.Component {
     getAll(){
       var messages = MessageStore.getAll();
       var room_id = MessageStore.getRoom();
-      this.setState({messagesData: messages});
+      this.setState({messagesData: messages.reverse()});
       this.setState({room_id: room_id});
     }
 
@@ -103,7 +104,7 @@ export default class Chat extends React.Component {
           </Navbar>
 
           <Messagebar
-            placeholder={this.placeholder}
+            placeholder={dict.send_message}
             ref={(el) => {this.messagebarComponent = el}}
             attachmentsVisible={this.attachmentsVisible}
             sheetVisible={this.state.sheetVisible}
@@ -123,7 +124,7 @@ export default class Chat extends React.Component {
           </Messagebar>
 
           <Messages ref={(el) => {this.messagesComponent = el}}>
-            <MessagesTitle><b>Sunday, Feb 9,</b> 12:58</MessagesTitle>
+            <MessagesTitle></MessagesTitle>
 
             {this.state.messagesData.map((message, index) => (
               <Message
@@ -153,6 +154,12 @@ export default class Chat extends React.Component {
               ></Message>
             )}
           </Messages>
+          <Toolbar tabbar labels color="blue" bottomMd={true}>
+            <Link href="#tab-1"><i class="f7-icons">data</i></Link>
+            <Link href="/new_cam_advert/"><i class="f7-icons">add_round</i></Link>
+            <Link href="/"><i class="f7-icons">home</i></Link>
+            <Link href="/login/"><i class="f7-icons">person_round</i></Link>
+          </Toolbar>
         </Page>
       )
     }
@@ -166,7 +173,9 @@ export default class Chat extends React.Component {
       return self.state.attachments.length > 0 ? 'Add comment or Send' : 'Message';
     }
     componentDidMount() {
-      MyActions.getMessages(this.state.advertId, this.state.token);
+      console.log(this.state);
+      MyActions.getMessages(this.state.advertId, this.state.token, this.state.room_id ,this.state.page);
+      MyActions.roomSeen(this.state.room_id, this.state.token);
       const self = this;
       self.$f7ready(() => {
         self.messagebar = self.messagebarComponent.f7Messagebar;

@@ -3,6 +3,7 @@ import { Page, Navbar, Block, Link, Toolbar, Swiper, SwiperSlide, NavTitle, Bloc
 
 import * as MyActions from "../../actions/MyActions";
 import MyStore from "../../stores/MyStore";
+import MessageStore from "../../stores/MessageStore";
 import { dict} from '../Dict';
 import AdvertCard from './AdvertCard';
 import logo from  "../../images/logo.png";
@@ -17,6 +18,7 @@ export default class AdvertShow extends Component {
     this.unpinned = this.unpinned.bind(this);
     this.liked = this.liked.bind(this);
     this.disliked = this.disliked.bind(this);
+    this.getRoom = this.getRoom.bind(this);
     this.swiperRef = React.createRef();
     if (window.cordova){
       var uuid = window.device.uuid
@@ -40,6 +42,7 @@ export default class AdvertShow extends Component {
       pinned: false,
       liked: false,
       likes: 0,
+      room_id: 0,
       initSwiper: false
     };
   }
@@ -51,6 +54,7 @@ export default class AdvertShow extends Component {
     MyStore.on("disliked", this.disliked);
     MyStore.on("pinned", this.pinned);
     MyStore.on("unpinned", this.unpinned);
+    MessageStore.on("roomLink", this.getRoom);
   }
 
   componentWillUnmount() {
@@ -59,6 +63,7 @@ export default class AdvertShow extends Component {
     MyStore.removeListener("disliked", this.disliked);
     MyStore.removeListener("pinned", this.pinned);
     MyStore.removeListener("unpinned", this.unpinned);
+    MessageStore.removeListener("roomLink", this.getRoom);
   }
 
 
@@ -67,6 +72,7 @@ export default class AdvertShow extends Component {
     MyActions.pinned(this.$f7route.params['advertId'], this.state.uuid, this.state.token);
     MyActions.liked(this.$f7route.params['advertId'], this.state.uuid, this.state.token);
     MyActions.getAdvertisement(this.$f7route.params['advertId']);
+    MyActions.getUserRooms(this.$f7route.params['advertId'], this.state.token);
     const swiper = this.swiperRef.current.swiper;
     swiper.update();
   }
@@ -143,6 +149,13 @@ export default class AdvertShow extends Component {
     this.setState({ pinned: true})
   }
 
+  getRoom(){
+    console.log('getRoom');
+    var room_id = MessageStore.getRoom();
+    console.log(room_id);
+    this.setState({ room_id: room_id })
+  }
+
   pinbt(){
     return(
       <Button color="orange" fill={this.state.pinned} onClick={() => {this.pin(this.state.id)}}><i class="f7-icons icon-5">bookmark</i> {this.state.pinned? dict.pinned : dict.pin}</Button>
@@ -184,7 +197,7 @@ export default class AdvertShow extends Component {
           <Segmented raised tag="p">
             {this.pinbt()}
             <Button color="red" fill={this.state.liked} onClick={() => {this.like(this.state.id)}}><i class="f7-icons icon-5">heart</i> <span class>({this.state.likes})</span></Button>
-            <Button color="green" fill href={'/chat/'+this.state.id}><i class="f7-icons icon-5">email</i> {dict.message_to_seller}</Button>
+            <Button color="green" fill href={'/chat/'+this.state.id+'/room/'+this.state.room_id}><i class="f7-icons icon-5">email</i> {dict.message_to_seller}</Button>
           </Segmented>
         </Block>
 

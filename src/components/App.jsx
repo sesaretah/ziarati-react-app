@@ -31,10 +31,13 @@ export default function (props) {
   const f7params = {
     id: 'io.framework7.testapp', // App bundle ID
     name: 'Framework7', // App name
-    theme: 'ios', // Automatic theme detection
+    theme: 'ios',
     // App routes
     touch: {
       disableContextMenu: false
+    },
+    view: {
+      animate : false,
     },
     routes,
   };

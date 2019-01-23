@@ -5,8 +5,10 @@ import dispatcher from "../dispatcher";
 class MessageStore extends EventEmitter {
   constructor() {
     super()
-    this.messages = []
-    this.room_id = ''
+    this.messages = [];
+    this.room_id = '';
+    this.groups = [];
+    this.rooms = [];
   }
 
   newMessage(message){
@@ -25,10 +27,36 @@ class MessageStore extends EventEmitter {
     this.emit("messages");
   }
 
-  groupMessages(data){
-    console.log(data);
+  roomsCollect(data){
+    this.rooms = [];
+    for (var i = 0, len = data.result.length; i < len; ++i) {
+      console.log(data.result[i]);
+      this.rooms.push(data.result[i]);
+    }
+    this.emit("rooms");
   }
 
+  groupMessages(data){
+    this.groups = [];
+    for (var i = 0, len = data.result.length; i < len; ++i) {
+      this.groups.push(data.result[i]);
+    }
+    this.emit("groups");
+  }
+
+  roomLink(data){
+    console.log(data);
+    this.room_id = data.room.id;
+    this.emit("roomLink");
+  }
+
+  getGroups() {
+    return this.groups
+  }
+
+  getRooms() {
+    return this.rooms
+  }
 
   getAll() {
     return this.messages
@@ -50,8 +78,17 @@ class MessageStore extends EventEmitter {
         this.roomMessages(action.data);
         break;
       }
+      case "ROOMS": {
+        this.roomsCollect(action.data);
+        break;
+      }
       case "GROUP_MESSAGES": {
         this.groupMessages(action.data);
+        break;
+      }
+
+      case "ADVERT_ROOM": {
+        this.roomLink(action.data);
         break;
       }
     }

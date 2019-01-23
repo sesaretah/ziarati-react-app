@@ -14,6 +14,7 @@ import NewCamAdvert from './components/pages/NewCamAdvert';
 import EditCamAdvert from './components/pages/EditCamAdvert';
 import Chat from './components/pages/Chat';
 import Messages from './components/pages/Messages';
+import Rooms from './components/pages/Rooms';
 
 export default [
   {
@@ -57,8 +58,12 @@ export default [
     component: EditCamAdvert,
   },
   {
-    path: '/chat/:advertId',
+    path: '/chat/:advertId/room/:roomId',
     component: Chat,
+  },
+  {
+    path: '/rooms/:advertId',
+    component: Rooms,
   },
   {
     path: '/dynamic-route/blog/:blogId/post/:postId/',

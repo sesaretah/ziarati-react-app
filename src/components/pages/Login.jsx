@@ -155,18 +155,18 @@ export default class Login extends React.Component {
             <Button raised big fill color="red" onClick={this.signOut.bind(this)}>{dict.sign_out}</Button>
           </Block>
         </List>
-
+        
         <List>
-  <ListItem title={dict.my_advertisements} link="#"></ListItem>
-  <ListItem title={dict.my_pins} link="#"></ListItem>
-  <ListItem title={dict.messages} link="/messages/"></ListItem>
-</List>
+          <ListItem title={dict.my_advertisements} link="#"></ListItem>
+          <ListItem title={dict.my_pins} link="#"></ListItem>
+          <ListItem title={dict.messages} link="/messages/" badge=""></ListItem>
+        </List>
 
         <Block>
-        <List mediaList>
-          {this.createItem()}
-        </List>
-      </Block>
+          <List mediaList>
+            {this.createItem()}
+          </List>
+        </Block>
       </React.Fragment>
 
     );

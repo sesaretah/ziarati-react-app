@@ -272,3 +272,7 @@ input:not(:focus):valid ~ .floating-label{
 .justify {
   text-align: justify;
 }
+.toolbar.messagebar {
+  bottom: 45px;
+  background-color: #ccc;
+}

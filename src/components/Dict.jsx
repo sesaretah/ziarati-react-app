@@ -36,5 +36,6 @@ export const dict = {
   'pin' : 'نشان کن',
   'pinned': 'نشان شده',
   'message_to_seller': 'ارسال پیام',
-  'messages': 'پیام ها '
+  'messages': 'پیام ها ',
+  'send_message': 'پیام خود را بنویسید'
 };
