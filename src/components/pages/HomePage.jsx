@@ -26,6 +26,7 @@ import {
 
 import * as MyActions from "../../actions/MyActions";
 import MyStore from "../../stores/MyStore";
+import MessageStore from "../../stores/MessageStore";
 import { dict} from '../Dict';
 import AdvertCard from './AdvertCard';
 import logo from  "../../images/logo.png";
@@ -38,9 +39,12 @@ export default class HomePage extends React.Component {
   constructor() {
     super();
     this.getAdvertisements = this.getAdvertisements.bind(this);
+    this.getUnseens = this.getUnseens.bind(this);
     this.onBackKeyDown = this.onBackKeyDown.bind(this);
     this.state = {
       advertisements: MyStore.getAll(),
+      token: localStorage.getItem('token'),
+      unseens: 0,
       query: '',
       allowInfinite: true,
       showPreloader: true,
@@ -51,16 +55,19 @@ export default class HomePage extends React.Component {
   componentWillMount() {
     MyStore.on("change", this.getAdvertisements);
     MyStore.on("load", this.getAdvertisements);
+    MessageStore.on("unseens", this.getUnseens);
   }
 
   componentWillUnmount() {
     MyStore.removeListener("change", this.getAdvertisements);
     MyStore.removeListener("load", this.getAdvertisements);
+    MessageStore.removeListener("unseens", this.getUnseens);
   }
 
   componentDidMount(){
     document.addEventListener('backbutton', this.onBackKeyDown, false);
     MyActions.getAdvertisements(this.state);
+    MyActions.getAllUnseens(this.state.token);
   }
 
   onBackKeyDown() {
@@ -68,11 +75,11 @@ export default class HomePage extends React.Component {
     const app = self.$f7;
     const router = self.$f7router;
     if (router.url == '/') {
-      console.log('Exiting');
-      navigator.app.exitApp();
-      navigator.device.exitApp();
-    } else {
+      console.log();
       router.navigate('/');
+    } else {
+      document.removeEventListener('backbutton', this.onBackKeyDown, false);
+      router.back();
     }
   }
 
@@ -146,7 +153,11 @@ export default class HomePage extends React.Component {
     return items
   }
 
-
+  getUnseens() {
+    this.setState({
+      unseens: MessageStore.getUnseens(),
+    });
+  }
 
 
 
@@ -198,7 +209,7 @@ export default class HomePage extends React.Component {
           <Link href="/login/">
             <i class="icon f7-icons ios-only">
               person_round
-              <span class="badge color-red"></span>
+              <span class="badge color-red">{this.state.unseens}</span>
             </i>
           </Link>
         </Toolbar>

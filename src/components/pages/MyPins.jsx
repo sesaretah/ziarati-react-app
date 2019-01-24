@@ -31,68 +31,64 @@ import MyStore from "../../stores/MyStore";
 import { dict} from '../Dict';
 import logo from  "../../images/logo.png";
 
-export default class Message extends React.Component {
-
+export default class MyAdverts extends React.Component {
   constructor(props) {
     super(props);
-    this.getRooms = this.getRooms.bind(this)
-    this.onBackKeyDown = this.onBackKeyDown.bind(this);
+    this.getAdvertisements = this.getAdvertisements.bind(this);
+    this.getUnseens = this.getUnseens.bind(this);
     this.state = {
-      rooms: [],
-      advertId: this.$f7route.params['advertId'],
+      advertisements: [],
       token: localStorage.getItem('token'),
+      unseens: 0,
+      username: '',
+      password: '',
     };
   }
 
   componentWillMount() {
-    MessageStore.on("rooms", this.getRooms);
+    MyStore.on("change", this.getAdvertisements);
+    MessageStore.on("unseens", this.getUnseens);
   }
 
   componentWillUnmount() {
-    MessageStore.removeListener("rooms", this.getRooms);
+    MyStore.removeListener("change", this.getAdvertisements);
+    MessageStore.removeListener("unseens", this.getUnseens);
   }
 
   componentDidMount(){
-    document.addEventListener('backbutton', this.onBackKeyDown, false);
-    MyActions.getRooms(this.state.advertId, this.state.token);
+    MyActions.getMyPins(this.state.token);
+    MyActions.getAllUnseens(this.state.token);
   }
 
-  onBackKeyDown() {
-    const self = this;
-    const app = self.$f7;
-    const router = self.$f7router;
-    if (router.url == '/') {
-      router.navigate('/');
-    } else {
-      document.removeEventListener('backbutton', this.onBackKeyDown, false);
-      router.back();
-    }
-  }
-
-
-  getRooms(){
-    var rooms = MessageStore.getRooms();
-    console.log(rooms);
-    this.setState({rooms: rooms});
+  getAdvertisements() {
+    this.setState({
+      advertisements: MyStore.getAll(),
+    });
   }
 
   createItem(){
-    var length = this.state.rooms.length;
+    var length = this.state.advertisements.length;
     let items = []
     for (let i = 0; i < length; i++) {
       items.push(<ListItem
-        link={'/chat/' + this.state.rooms[i].advert_id + '/room/'+this.state.rooms[i].id}
-        title={this.state.rooms[i].title}
+        link={'/adsverts/' + this.state.advertisements[i].id}
+        title={this.state.advertisements[i].title}
         after=""
         subtitle=""
         text=""
-        badge={this.state.rooms[i].count}
-        badgeColor="red"
         >
       </ListItem>);
     }
     return items
   }
+
+
+  getUnseens() {
+    this.setState({
+      unseens: MessageStore.getUnseens(),
+    });
+  }
+
 
   render() {
     return (
@@ -102,21 +98,22 @@ export default class Message extends React.Component {
             <img src={logo} alt="Logo" className="logo" />
           </NavTitle>
         </Navbar>
-
-        <List  simple-list>
-          {this.createItem()}
-        </List>
+        <Block>
+          <List mediaList>
+            {this.createItem()}
+          </List>
+        </Block>
 
         <Toolbar tabbar labels color="blue" bottomMd={true}>
           <Link href="#tab-1"><i class="f7-icons">data</i></Link>
           <Link href="/new_cam_advert/"><i class="f7-icons">add_round</i></Link>
           <Link href="/"><i class="f7-icons">home</i></Link>
-          <Link href="/login/">
-            <i class="icon f7-icons ios-only">
-              person_round
-              <span class="badge color-red"></span>
-            </i>
-          </Link>
+            <Link href="/login/">
+              <i class="icon f7-icons ios-only">
+                person_round
+                <span class="badge color-red">{this.state.unseens}</span>
+              </i>
+            </Link>
         </Toolbar>
       </Page>
     )

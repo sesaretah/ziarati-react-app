@@ -37,5 +37,7 @@ export const dict = {
   'pinned': 'نشان شده',
   'message_to_seller': 'ارسال پیام',
   'messages': 'پیام ها ',
-  'send_message': 'پیام خود را بنویسید'
+  'send_message': 'پیام خود را بنویسید',
+  'conversations_on_other_ads': 'پیام ها بر روی آگهی های دیگران',
+  'conversations_on_your_ads': 'پیام ها بر آگهی های شما',
 };

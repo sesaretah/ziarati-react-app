@@ -47,7 +47,7 @@ export default class Chat extends React.Component {
       this.getMessage = this.getMessage.bind(this)
       this.sendMessage = this.sendMessage.bind(this)
       this.getAll = this.getAll.bind(this)
-
+      this.onBackKeyDown = this.onBackKeyDown.bind(this);
       this.state = {
         token: localStorage.getItem('token'),
         advertId: this.$f7route.params['advertId'],
@@ -173,14 +173,26 @@ export default class Chat extends React.Component {
       return self.state.attachments.length > 0 ? 'Add comment or Send' : 'Message';
     }
     componentDidMount() {
-      console.log(this.state);
+      //console.log(this.state);
       MyActions.getMessages(this.state.advertId, this.state.token, this.state.room_id ,this.state.page);
       MyActions.roomSeen(this.state.room_id, this.state.token);
+      document.addEventListener('backbutton', this.onBackKeyDown, false);
       const self = this;
       self.$f7ready(() => {
         self.messagebar = self.messagebarComponent.f7Messagebar;
         self.messages = self.messagesComponent.f7Messages;
       });
+    }
+    onBackKeyDown() {
+      const self = this;
+      const app = self.$f7;
+      const router = self.$f7router;
+      if (router.url == '/') {
+        router.navigate('/');
+      } else {
+        document.removeEventListener('backbutton', this.onBackKeyDown, false);
+        router.back();
+      }
     }
     isFirstMessage(message, index) {
       const self = this;

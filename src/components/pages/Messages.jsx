@@ -36,43 +36,70 @@ export default class Message extends React.Component {
   constructor(props) {
     super(props);
     this.getGroups = this.getGroups.bind(this)
-
+    this.getAdminGroups = this.getAdminGroups.bind(this)
     this.state = {
       groups: [],
+      adminGroups: [],
       token: localStorage.getItem('token'),
     };
   }
 
   componentWillMount() {
     MessageStore.on("groups", this.getGroups);
+    MessageStore.on("admin_groups", this.getAdminGroups);
   }
 
   componentWillUnmount() {
     MessageStore.removeListener("groups", this.getGroups);
+    MessageStore.removeListener("admin_groups", this.getAdminGroups);
   }
 
   componentDidMount(){
     MyActions.groupedMessages(this.state.token);
+    MyActions.adminGroupedMessages(this.state.token);
   }
 
 
   getGroups(){
     var groups = MessageStore.getGroups();
-    console.log(groups);
     this.setState({groups: groups});
   }
 
-  createItem(){
+  getAdminGroups(){
+    var adminGroups = MessageStore.getAdminGroups();
+    this.setState({adminGroups: adminGroups});
+  }
+
+  createOtherItem(){
     var length = this.state.groups.length;
     let items = []
     for (let i = 0; i < length; i++) {
       items.push(<ListItem
-        link={'/rooms/' + this.state.groups[i].id}
+        link={'/chat/' + this.state.groups[i].id+'/room/'+this.state.groups[i].rooms[0].id}
         title={this.state.groups[i].title}
         after=""
         subtitle=""
         text=""
-        badge=""
+        badge={this.state.groups[i].count}
+        badgeColor="red"
+        >
+      </ListItem>);
+    }
+    return items
+  }
+
+  createYourItem(){
+    var length = this.state.adminGroups.length;
+    let items = []
+    for (let i = 0; i < length; i++) {
+      items.push(<ListItem
+        link={'/rooms/' + this.state.adminGroups[i].id}
+        title={this.state.adminGroups[i].title}
+        after=""
+        subtitle=""
+        text=""
+        badge={this.state.adminGroups[i].count}
+        badgeColor="red"
         >
       </ListItem>);
     }
@@ -88,9 +115,19 @@ export default class Message extends React.Component {
           </NavTitle>
         </Navbar>
 
+        <BlockTitle>{dict.conversations_on_other_ads}</BlockTitle>
+        <Block>
         <List  simple-list>
-          {this.createItem()}
+          {this.createOtherItem()}
         </List>
+        </Block>
+
+        <BlockTitle>{dict.conversations_on_your_ads}</BlockTitle>
+        <Block>
+        <List  simple-list>
+          {this.createYourItem()}
+        </List>
+        </Block>
 
         <Toolbar tabbar labels color="blue" bottomMd={true}>
           <Link href="#tab-1"><i class="f7-icons">data</i></Link>

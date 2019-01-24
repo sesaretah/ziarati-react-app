@@ -19,6 +19,7 @@ export default class AdvertShow extends Component {
     this.liked = this.liked.bind(this);
     this.disliked = this.disliked.bind(this);
     this.getRoom = this.getRoom.bind(this);
+    this.onBackKeyDown = this.onBackKeyDown.bind(this);
     this.swiperRef = React.createRef();
     if (window.cordova){
       var uuid = window.device.uuid
@@ -42,6 +43,7 @@ export default class AdvertShow extends Component {
       pinned: false,
       liked: false,
       likes: 0,
+      owner: false,
       room_id: 0,
       initSwiper: false
     };
@@ -71,11 +73,26 @@ export default class AdvertShow extends Component {
   componentDidMount(){
     MyActions.pinned(this.$f7route.params['advertId'], this.state.uuid, this.state.token);
     MyActions.liked(this.$f7route.params['advertId'], this.state.uuid, this.state.token);
-    MyActions.getAdvertisement(this.$f7route.params['advertId']);
+    MyActions.getAdvertisement(this.$f7route.params['advertId'], this.state.token);
     MyActions.getUserRooms(this.$f7route.params['advertId'], this.state.token);
+    document.addEventListener('backbutton', this.onBackKeyDown, false);
     const swiper = this.swiperRef.current.swiper;
     swiper.update();
   }
+
+  onBackKeyDown() {
+    const self = this;
+    const app = self.$f7;
+    const router = self.$f7router;
+    if (router.url == '/') {
+      console.log();
+      router.navigate('/');
+    } else {
+      document.removeEventListener('backbutton', this.onBackKeyDown, false);
+      router.navigate('/');
+    }
+  }
+
 
 
 
@@ -94,6 +111,7 @@ export default class AdvertShow extends Component {
       telegram_channel:  advertisements[0].telegram_channel,
       instagram_page:  advertisements[0].instagram_page,
       website:  advertisements[0].website,
+      owner: advertisements[0].owner,
       initSwiper: true
     });
   }
@@ -156,10 +174,24 @@ export default class AdvertShow extends Component {
     this.setState({ room_id: room_id })
   }
 
-  pinbt(){
-    return(
-      <Button color="orange" fill={this.state.pinned} onClick={() => {this.pin(this.state.id)}}><i class="f7-icons icon-5">bookmark</i> {this.state.pinned? dict.pinned : dict.pin}</Button>
-    );
+  bt(){
+    if (this.state.owner) {
+      return(
+        <Segmented raised tag="p">
+          <Button color="orange"><i class="f7-icons icon-5">bookmark</i></Button>
+          <Button color="red" ><i class="f7-icons icon-5">heart</i> <span class>({this.state.likes})</span></Button>
+        </Segmented>
+      );
+    } else {
+      return(
+        <Segmented raised tag="p">
+          <Button color="orange" fill={this.state.pinned} onClick={() => {this.pin(this.state.id)}}><i class="f7-icons icon-5">bookmark</i> {this.state.pinned? dict.pinned : dict.pin}</Button>
+          <Button color="red" fill={this.state.liked} onClick={() => {this.like(this.state.id)}}><i class="f7-icons icon-5">heart</i> <span class>({this.state.likes})</span></Button>
+          <Button color="green" fill href={'/chat/'+this.state.id+'/room/'+this.state.room_id}><i class="f7-icons icon-5">email</i> {dict.message_to_seller}</Button>
+        </Segmented>
+      );
+    }
+
   }
 
 
@@ -194,11 +226,9 @@ export default class AdvertShow extends Component {
         </Block>
 
         <Block>
-          <Segmented raised tag="p">
-            {this.pinbt()}
-            <Button color="red" fill={this.state.liked} onClick={() => {this.like(this.state.id)}}><i class="f7-icons icon-5">heart</i> <span class>({this.state.likes})</span></Button>
-            <Button color="green" fill href={'/chat/'+this.state.id+'/room/'+this.state.room_id}><i class="f7-icons icon-5">email</i> {dict.message_to_seller}</Button>
-          </Segmented>
+
+          {this.bt()}
+
         </Block>
 
         <Toolbar tabbar labels color="blue" bottomMd={true}>

@@ -1,7 +1,7 @@
 import dispatcher from "../dispatcher";
 import axios from 'axios';
-const server='http://localhost:3000/api';
-//const server='http://sanatik.ir/api';
+//const server='http://localhost:3000/api';
+const server='http://sanatik.ir/api';
 
 export function createTodo(text) {
   dispatcher.dispatch({
@@ -106,6 +106,22 @@ export function groupedMessages(token) {
   });
 }
 
+export function adminGroupedMessages(token) {
+  axios.get(server + '/admin_grouped_messages', { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
+  .then(function (response) {
+    console.log(response);
+    if (response.data.result) {
+      dispatcher.dispatch({
+        type: "ADMIN_GROUP_MESSAGES",
+        data: response.data,
+      });
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
 export function getRooms(id, token) {
   axios.get(server + '/rooms/'+id, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
   .then(function (response) {
@@ -152,6 +168,25 @@ export function roomSeen(room_id, token) {
   });
 }
 }
+
+export function getAllUnseens(token) {
+  if (token) {
+  axios.get(server + '/all_unseens', { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
+  .then(function (response) {
+    if (response.data.result) {
+      dispatcher.dispatch({
+        type: "ALL_UNSEENS",
+        data: response.data,
+      });
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+}
+
+
 
 
 export function createTourPackage(data) {
@@ -235,6 +270,22 @@ export function getAdvertisements(data) {
     console.log(error);
   });
 }
+
+export function getMyPins(token) {
+  axios.get(server + '/my_pins',  { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token }})
+  .then(function (response) {
+    console.log(response);
+    dispatcher.dispatch({
+      type: "SHOW_ADVERTISEMENTS",
+      advertisements: response.data,
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+
 
 export function makePin(id, device, token) {
   axios.get(server + '/make_pin/'+id+'?device_id='+device,  { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token }})
@@ -402,8 +453,8 @@ export function searchAdvertisements(data) {
   });
 }
 
-export function getAdvertisement(id) {
-  axios.get(server + '/advertisement/' + id)
+export function getAdvertisement(id, token) {
+  axios.get(server + '/advertisement/' + id,  { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
   .then(function (response) {
     console.log(response.data);
     dispatcher.dispatch({

@@ -8,7 +8,9 @@ class MessageStore extends EventEmitter {
     this.messages = [];
     this.room_id = '';
     this.groups = [];
+    this.adminGroups = [];
     this.rooms = [];
+    this.unseens = 0;
   }
 
   newMessage(message){
@@ -44,14 +46,31 @@ class MessageStore extends EventEmitter {
     this.emit("groups");
   }
 
+  adminGroupMessages(data){
+    this.adminGroups = [];
+    for (var i = 0, len = data.result.length; i < len; ++i) {
+      this.adminGroups.push(data.result[i]);
+    }
+    this.emit("admin_groups");
+  }
+
   roomLink(data){
     console.log(data);
     this.room_id = data.room.id;
     this.emit("roomLink");
   }
 
+  allUnseens(data){
+    this.unseens = data.count;
+    this.emit("unseens");
+  }
+
   getGroups() {
     return this.groups
+  }
+
+  getAdminGroups() {
+    return this.adminGroups
   }
 
   getRooms() {
@@ -66,6 +85,9 @@ class MessageStore extends EventEmitter {
     return this.room_id
   }
 
+  getUnseens() {
+    return this.unseens
+  }
 
 
   handleActions(action) {
@@ -87,8 +109,18 @@ class MessageStore extends EventEmitter {
         break;
       }
 
+      case "ADMIN_GROUP_MESSAGES": {
+        this.adminGroupMessages(action.data);
+        break;
+      }
+
       case "ADVERT_ROOM": {
         this.roomLink(action.data);
+        break;
+      }
+
+      case "ALL_UNSEENS": {
+        this.allUnseens(action.data);
         break;
       }
     }

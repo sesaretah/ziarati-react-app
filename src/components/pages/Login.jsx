@@ -27,6 +27,7 @@ import {
 
 import * as MyActions from "../../actions/MyActions";
 import UserStore from "../../stores/UserStore";
+import MessageStore from "../../stores/MessageStore";
 import MyStore from "../../stores/MyStore";
 import { dict} from '../Dict';
 import logo from  "../../images/logo.png";
@@ -37,9 +38,11 @@ export default class Login extends React.Component {
     this.logged_in = this.logged_in.bind(this);
     this.not_logged_in = this.not_logged_in.bind(this);
     this.getAdvertisements = this.getAdvertisements.bind(this);
+    this.getUnseens = this.getUnseens.bind(this);
     this.state = {
       advertisements: [],
       token: localStorage.getItem('token'),
+      unseens: 0,
       username: '',
       password: '',
     };
@@ -49,17 +52,19 @@ export default class Login extends React.Component {
     MyStore.on("change", this.getAdvertisements);
     UserStore.on("logged_in", this.logged_in);
     UserStore.on("not_logged_in", this.not_logged_in);
+    MessageStore.on("unseens", this.getUnseens);
   }
 
   componentWillUnmount() {
     MyStore.removeListener("change", this.getAdvertisements);
     UserStore.removeListener("logged_in", this.logged_in);
     UserStore.removeListener("not_logged_in", this.not_logged_in);
+    MessageStore.removeListener("unseens", this.getUnseens);
   }
 
   componentDidMount(){
-    //  console.log('Mounted');
     MyActions.getMyAdvertisements(this.state);
+    MyActions.getAllUnseens(this.state.token);
   }
 
   getAdvertisements() {
@@ -155,18 +160,14 @@ export default class Login extends React.Component {
             <Button raised big fill color="red" onClick={this.signOut.bind(this)}>{dict.sign_out}</Button>
           </Block>
         </List>
-        
+
         <List>
-          <ListItem title={dict.my_advertisements} link="#"></ListItem>
-          <ListItem title={dict.my_pins} link="#"></ListItem>
-          <ListItem title={dict.messages} link="/messages/" badge=""></ListItem>
+          <ListItem title={dict.my_advertisements} link="/my_adverts/"></ListItem>
+          <ListItem title={dict.my_pins} link="/my_pins/"></ListItem>
+          <ListItem title={dict.messages} link="/messages/"  badge={this.state.unseens} badgeColor="red"></ListItem>
         </List>
 
-        <Block>
-          <List mediaList>
-            {this.createItem()}
-          </List>
-        </Block>
+
       </React.Fragment>
 
     );
@@ -205,6 +206,12 @@ export default class Login extends React.Component {
 
   }
 
+  getUnseens() {
+    this.setState({
+      unseens: MessageStore.getUnseens(),
+    });
+  }
+
 
   render() {
     return (
@@ -220,7 +227,12 @@ export default class Login extends React.Component {
           <Link href="#tab-1"><i class="f7-icons">data</i></Link>
           <Link href="/new_cam_advert/"><i class="f7-icons">add_round</i></Link>
           <Link href="/"><i class="f7-icons">home</i></Link>
-          <Link href="/login/"><i class="f7-icons">person_round</i></Link>
+            <Link href="/login/">
+              <i class="icon f7-icons ios-only">
+                person_round
+                <span class="badge color-red">{this.state.unseens}</span>
+              </i>
+            </Link>
         </Toolbar>
       </Page>
     )

@@ -15,6 +15,8 @@ import EditCamAdvert from './components/pages/EditCamAdvert';
 import Chat from './components/pages/Chat';
 import Messages from './components/pages/Messages';
 import Rooms from './components/pages/Rooms';
+import MyAdverts from './components/pages/MyAdverts';
+import MyPins from './components/pages/MyPins';
 
 export default [
   {
@@ -44,6 +46,14 @@ export default [
   {
     path: '/new_advert/',
     component: NewAdvert,
+  },
+  {
+    path: '/my_adverts/',
+    component: MyAdverts,
+  },
+  {
+    path: '/my_pins/',
+    component: MyPins,
   },
   {
     path: '/new_cam_advert/',
