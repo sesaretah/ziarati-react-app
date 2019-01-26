@@ -43,7 +43,7 @@ export default class HomePage extends React.Component {
     this.onBackKeyDown = this.onBackKeyDown.bind(this);
     this.state = {
       advertisements: MyStore.getAll(),
-      token: localStorage.getItem('token'),
+      token: window.localStorage.getItem('token'),
       unseens: 0,
       query: '',
       allowInfinite: true,

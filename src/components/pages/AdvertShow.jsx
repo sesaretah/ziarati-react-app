@@ -27,7 +27,7 @@ export default class AdvertShow extends Component {
       var uuid = ''
     }
     this.state = {
-      token: localStorage.getItem('token'),
+      token: window.localStorage.getItem('token'),
       uuid: uuid,
       title: '',
       content: '',

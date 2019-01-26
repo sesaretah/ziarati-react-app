@@ -16,7 +16,7 @@ export default class NewCamAdvert extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      token: localStorage.getItem('token'),
+      token: window.localStorage.getItem('token'),
       title: '',
       content: '',
       images: [] ,
@@ -126,6 +126,7 @@ export default class NewCamAdvert extends Component {
 
 
   componentDidMount(){
+    console.log(this.state);
     if(this.state.token) {
       MyActions.getProfile(this.state.token);
     } else {

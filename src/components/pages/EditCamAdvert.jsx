@@ -16,7 +16,7 @@ export default class EditCamAdvert extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      token: localStorage.getItem('token'),
+      token: window.localStorage.getItem('token'),
       title: '',
       content: '',
       images: [] ,

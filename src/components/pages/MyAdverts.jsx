@@ -38,7 +38,7 @@ export default class MyAdverts extends React.Component {
     this.getUnseens = this.getUnseens.bind(this);
     this.state = {
       advertisements: [],
-      token: localStorage.getItem('token'),
+      token: window.localStorage.getItem('token'),
       unseens: 0,
       username: '',
       password: '',

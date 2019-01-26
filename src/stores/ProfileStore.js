@@ -16,6 +16,7 @@ class ProfileStore extends EventEmitter {
   }
 
   show_profile(profile){
+    console.log(profile);
     this.id = profile.id;
     this.phone_number = profile.phone_number;
     this.address = profile.address;
@@ -29,6 +30,7 @@ class ProfileStore extends EventEmitter {
 
 
   getProfile() {
+    console.log(this);
     return this
   }
 

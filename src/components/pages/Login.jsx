@@ -41,7 +41,7 @@ export default class Login extends React.Component {
     this.getUnseens = this.getUnseens.bind(this);
     this.state = {
       advertisements: [],
-      token: localStorage.getItem('token'),
+      token: window.localStorage.getItem('token'),
       unseens: 0,
       username: '',
       password: '',
@@ -78,7 +78,7 @@ export default class Login extends React.Component {
     const app = self.$f7;
     const router = self.$f7router;
     console.log(UserStore.getToken());
-    localStorage.setItem('token', UserStore.getToken());
+    window.localStorage.setItem('token', UserStore.getToken());
     router.back();
     window.plugins.toast.showWithOptions({
       message: 'خوش آمدید ',
@@ -113,7 +113,10 @@ export default class Login extends React.Component {
     const app = self.$f7;
     const router = self.$f7router;
     this.setState({ token: null});
-    localStorage.removeItem('token');
+    window.localStorage.removeItem('token');
+    window.cookies.clear(function() {
+      console.log('Cookies cleared!');
+    });
   }
 
   LoginContent() {

@@ -2,6 +2,7 @@ import dispatcher from "../dispatcher";
 import axios from 'axios';
 //const server='http://localhost:3000/api';
 const server='http://sanatik.ir/api';
+//const server='http://sanatik.ir:3000/api';
 
 export function createTodo(text) {
   dispatcher.dispatch({
@@ -468,8 +469,10 @@ export function getAdvertisement(id, token) {
 }
 
 export function getProfile(token) {
-  axios.get(server + '/profile',  { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
+  console.log(token);
+  axios.get(server + '/profile',  { headers: {'Authorization': 'Bearer ' + token } })
   .then(function (response) {
+    console.log(response);
     dispatcher.dispatch({
       type: "SHOW_PROFILE",
       profile: response.data,
