@@ -66,6 +66,10 @@ export default class MyAdverts extends React.Component {
     });
   }
 
+  deleteAd(id) {
+    MyActions.deleteAdvertisement(id, this.state.token);
+  }
+
   createItem(){
     var length = this.state.advertisements.length;
     let items = []

@@ -40,11 +40,14 @@ export default class AdvertShow extends Component {
       telegram_channel: '',
       instagram_page: '',
       website: '',
+      province: '',
       pinned: false,
       liked: false,
       likes: 0,
       owner: false,
       room_id: 0,
+      price: dict.call,
+      mobile: '',
       initSwiper: false
     };
   }
@@ -111,7 +114,10 @@ export default class AdvertShow extends Component {
       telegram_channel:  advertisements[0].telegram_channel,
       instagram_page:  advertisements[0].instagram_page,
       website:  advertisements[0].website,
+      province: advertisements[0].province,
       owner: advertisements[0].owner,
+      price: advertisements[0].price,
+      mobile: advertisements[0].mobile,
       initSwiper: true
     });
   }
@@ -211,19 +217,25 @@ export default class AdvertShow extends Component {
         <Block >
           <b>{this.state.title}</b>
           <p class='justify'>{this.state.content}</p>
+
+          <div class="float-left">
+            <div class="chip color-blue">
+              <div class="chip-label"><h3>{dict.price}:  {this.state.price ? this.state.price : dict.call}</h3></div>
+            </div>
+          </div>
         </Block>
 
         <BlockTitle>{dict.contact_information}</BlockTitle>
-        <Block strong>
-          <List simple-list>
-            <ListItem title={dict.phone_number}><a class="link external" href={'tel://' + this.state.phone_number}>{this.state.phone_number}</a></ListItem>
-            <ListItem title={dict.email}><span class="ltr"><a class="link external" href={'mailto:' + this.state.email}>{this.state.email}</a></span></ListItem>
-            <ListItem title={dict.telegram_channel}><span class="ltr"><a class="link external" href={this.state.telegram_channel ? 'http://telegram.me/' + this.state.telegram_channel.replace('@', '') : '#'}>{this.state.telegram_channel}</a></span></ListItem>
-            <ListItem title={dict.instagram_page}><span class="ltr"><a class="link external" href={this.state.instagram_page ? 'http://instagram.com/' + this.state.instagram_page.replace('@', '') : '#'}>{this.state.instagram_page}</a></span></ListItem>
-            <ListItem title={dict.city}>{this.state.city}</ListItem>
-            <ListItem title={dict.website}><span class="ltr"><a class="link external" href={this.state.website}>{this.state.website}</a></span></ListItem>
-          </List>
-        </Block>
+        <List simple-list>
+          <ListItem title={dict.phone_number}><a class="link external" href={'tel://' + this.state.phone_number}>{this.state.phone_number}</a></ListItem>
+          <ListItem title={dict.mobile}><a class="link external" href={'tel://' + this.state.mobile}>{this.state.mobile}</a></ListItem>
+          <ListItem title={dict.email}><span class="ltr"><a class="link external" href={'mailto:' + this.state.email}>{this.state.email}</a></span></ListItem>
+          <ListItem title={dict.telegram_channel}><span class="ltr"><a class="link external" href={this.state.telegram_channel ? 'http://telegram.me/' + this.state.telegram_channel.replace('@', '') : '#'}>{this.state.telegram_channel}</a></span></ListItem>
+          <ListItem title={dict.instagram_page}><span class="ltr"><a class="link external" href={this.state.instagram_page ? 'http://instagram.com/' + this.state.instagram_page.replace('@', '') : '#'}>{this.state.instagram_page}</a></span></ListItem>
+          <ListItem title={dict.website}><span class="ltr"><a class="link external" href={'http://' + this.state.website}>{this.state.website}</a></span></ListItem>
+          <ListItem title={dict.city}>{this.state.city}</ListItem>
+          <ListItem title={dict.province}><span class="ltr"><a class="link external" href='#'>{this.state.province}</a></span></ListItem>
+        </List>
 
         <Block>
 

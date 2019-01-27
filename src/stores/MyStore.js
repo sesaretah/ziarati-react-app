@@ -8,6 +8,7 @@ class MyStore extends EventEmitter {
     this.advertisements = [];
     this.photos= [];
     this.likes = '';
+    this.provinces = [];
   }
 
   createTourPackage(tourPackage) {
@@ -67,6 +68,14 @@ class MyStore extends EventEmitter {
     this.emit("change_photos");
   }
 
+  showProvinces(provinces){
+    this.provinces = [];
+    for (var i = 0, len = provinces.length; i < len; ++i) {
+      this.provinces.push(provinces[i]);
+    }
+    this.emit("show_provinces");
+  }
+
   unpinned(pin) {
     this.emit("unpinned");
   }
@@ -91,6 +100,10 @@ class MyStore extends EventEmitter {
 
   getPhotos() {
     return this.photos;
+  }
+
+  getProvinces() {
+    return this.provinces;
   }
 
   getAll() {
@@ -152,6 +165,10 @@ class MyStore extends EventEmitter {
 
       case "DELETE_PHOTO": {
         this.deletePhoto(action.photos);
+        break;
+      }
+      case "SHOW_PROVINCES": {
+        this.showProvinces(action.provinces);
         break;
       }
     }

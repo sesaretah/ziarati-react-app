@@ -32,6 +32,25 @@ export function createAgency(data) {
   });
 }
 
+export function updateFCM(token, uuid) {
+  window.FirebasePlugin.getToken(function (fcm_token) {
+    console.log(fcm_token);
+    axios.get(server + '/update_token?fcm_token='+fcm_token + '&device_uuid='+uuid, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
+    .then(function (response) {
+      console.log(response);
+      if (response.data.result) {
+        dispatcher.dispatch({
+          type: "TOKEN_UPDATED",
+          data: response.data,
+        });
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  });
+}
+
 export function createAdvertisement(data) {
 
   axios.post(server + '/make_advertisement', JSON.stringify(data), { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + data.token } })
@@ -155,36 +174,36 @@ export function getUserRooms(id, token) {
 
 export function roomSeen(room_id, token) {
   if (room_id) {
-  axios.get(server + '/seen/'+room_id, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
-  .then(function (response) {
-    if (response.data.result) {
-      dispatcher.dispatch({
-        type: "SEEN",
-        data: response.data,
-      });
-    }
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
+    axios.get(server + '/seen/'+room_id, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
+    .then(function (response) {
+      if (response.data.result) {
+        dispatcher.dispatch({
+          type: "SEEN",
+          data: response.data,
+        });
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
 }
 
 export function getAllUnseens(token) {
   if (token) {
-  axios.get(server + '/all_unseens', { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
-  .then(function (response) {
-    if (response.data.result) {
-      dispatcher.dispatch({
-        type: "ALL_UNSEENS",
-        data: response.data,
-      });
-    }
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
+    axios.get(server + '/all_unseens', { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
+    .then(function (response) {
+      if (response.data.result) {
+        dispatcher.dispatch({
+          type: "ALL_UNSEENS",
+          data: response.data,
+        });
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
 }
 
 
@@ -482,6 +501,23 @@ export function getProfile(token) {
     console.log(error);
   });
 }
+
+export function getProvinces(token) {
+  console.log(token);
+  axios.get(server + '/provinces')
+  .then(function (response) {
+    console.log(response);
+    dispatcher.dispatch({
+      type: "SHOW_PROVINCES",
+      provinces: response.data.provinces,
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+
 
 
 export function reloadTodos() {

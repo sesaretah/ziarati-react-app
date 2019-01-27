@@ -114,9 +114,12 @@ export default class Login extends React.Component {
     const router = self.$f7router;
     this.setState({ token: null});
     window.localStorage.removeItem('token');
-    window.cookies.clear(function() {
-      console.log('Cookies cleared!');
-    });
+    if (window.cordova){
+      window.cookies.clear(function() {
+        console.log('Cookies cleared!');
+      });
+    }
+
   }
 
   LoginContent() {
@@ -125,18 +128,18 @@ export default class Login extends React.Component {
         <LoginScreenTitle>{dict.login}</LoginScreenTitle>
         <List form>
           <ListInput
-            label=''
+            label={dict.username}
             type="tel"
-            placeholder={dict.username}
+            placeholder=''
             value={this.state.username}
             onInput={(e) => {
               this.setState({ username: e.target.value});
             }}
             />
           <ListInput
-            label=''
+            label={dict.password}
             type="password"
-            placeholder={dict.password}
+            placeholder=''
             value={this.state.password}
             onInput={(e) => {
               this.setState({ password: e.target.value});

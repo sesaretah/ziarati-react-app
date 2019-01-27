@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Page, Navbar, Block, Link, Toolbar, Swiper, SwiperSlide, BlockTitle, List, ListInput, Row, Button, Col, NavTitle, Segmented, Progressbar } from 'framework7-react';
+import { Page, Navbar, Block, Link, Toolbar, Swiper, SwiperSlide, BlockTitle, List, ListInput, Row, Button, Col, NavTitle, Segmented, Progressbar, ListItem } from 'framework7-react';
 
 import * as MyActions from "../../actions/MyActions";
 import ProfileStore from "../../stores/ProfileStore";
@@ -35,12 +35,19 @@ export default class EditCamAdvert extends Component {
       email:  '',
       telegram_channel: '',
       instagram_page: '',
-      website: ''
+      website: '',
+      province_id: '',
+      mobile: '',
+      price: '',
+      website: '',
+      provinces: []
     };
     this.submit = this.submit.bind(this);
     this.getAdvertisement = this.getAdvertisement.bind(this);
     this.getPhotos = this.getPhotos.bind(this);
     this.editAdvertisement = this.editAdvertisement.bind(this);
+    this.getProvinces = this.getProvinces.bind(this);
+    this.change = this.change.bind(this);
 
   }
 
@@ -131,6 +138,7 @@ export default class EditCamAdvert extends Component {
 
 
   componentDidMount(){
+    MyActions.getProvinces();
     if(this.state.token) {
       MyActions.getAdvertisement(this.$f7route.params['advertId']);
     } else {
@@ -150,12 +158,14 @@ export default class EditCamAdvert extends Component {
     MyStore.on("show_advertisement", this.getAdvertisement);
     MyStore.on("edit_advertisement", this.editAdvertisement);
     MyStore.on("change_photos", this.getPhotos);
+    MyStore.on("show_provinces", this.getProvinces);
   }
 
   componentWillUnmount() {
     MyStore.removeListener("show_advertisement", this.getAdvertisement);
     MyStore.removeListener("edit_advertisement", this.editAdvertisement);
     MyStore.removeListener("change_photos", this.getPhotos);
+    MyStore.removeListener("show_provinces", this.getProvinces);
   }
 
   getAdvertisement() {
@@ -174,6 +184,11 @@ export default class EditCamAdvert extends Component {
       telegram_channel:  advertisements[0].telegram_channel,
       instagram_page:  advertisements[0].instagram_page,
       website:  advertisements[0].website,
+      province: advertisements[0].province,
+      province_id: advertisements[0].province_id,
+      mobile:  advertisements[0].mobile,
+      price:  advertisements[0].price,
+
     });
   }
 
@@ -205,19 +220,22 @@ export default class EditCamAdvert extends Component {
   photos() {
     var items = []
     for (let i = 0; i < this.state.photos.length; i++) {
-      items.push(
-        <div class='w-100'>
-          <img src={this.state.photos[i].url} className="thumb" alt="picture" />
-          <Button fill color="red" onClick={() => {if (window.confirm('آیا مطمئن هستید؟ ')) this.deletePhoto(this.state.photos[i].id)}}>{dict.delete}</Button>
-        </div>
-      );
+      if (this.state.photos[i].id){
+        items.push(
+          <div class='w-100'>
+            <img src={this.state.photos[i].url} className="thumb" alt="picture" />
+            <Button fill color="red" onClick={() => {if (window.confirm('آیا مطمئن هستید؟ ')) this.deletePhoto(this.state.photos[i].id)}}>{dict.delete}</Button>
+          </div>
+        );
+      }
+
     }
     return items
   }
 
   getPhotos(){
     var photos = MyStore.getPhotos();
-    console.log();
+    console.log('photos', photos);
     this.setState({
       photos: photos
     });
@@ -234,6 +252,24 @@ export default class EditCamAdvert extends Component {
 
       });
     }
+  }
+
+  getProvinces(){
+    var provinces = MyStore.getProvinces();
+    this.setState({provinces: provinces});
+  }
+
+  provinceItems(){
+    var length = this.state.provinces.length;
+    let items = []
+    for (let i = 0; i < length; i++) {
+      items.push(<option value={this.state.provinces[i].id}>{this.state.provinces[i].name}</option>);
+    }
+    return items
+  }
+
+  change(e){
+    this.setState({province_id: e.target.value});
   }
 
   render() {
@@ -269,6 +305,17 @@ export default class EditCamAdvert extends Component {
             />
 
           <ListInput
+            label={dict.price}
+            type="tel"
+            maxlength="70"
+            placeholder= ""
+            value={this.state.price}
+            onInput={(e) => {
+              this.setState({ price: e.target.value});
+            }}
+            />
+
+          <ListInput
             label={dict.phone_number}
             type="tel"
             maxlength="70"
@@ -278,6 +325,18 @@ export default class EditCamAdvert extends Component {
               this.setState({ phone_number: e.target.value});
             }}
             />
+
+          <ListInput
+            label={dict.mobile}
+            type="tel"
+            maxlength="70"
+            placeholder= {dict.pmobile}
+            value={this.state.mobile}
+            onInput={(e) => {
+              this.setState({ mobile: e.target.value});
+            }}
+            />
+
 
           <ListInput
             label={dict.telegram_channel}
@@ -315,6 +374,39 @@ export default class EditCamAdvert extends Component {
             }}
             />
 
+            <ListInput
+              label={dict.website}
+              type="text"
+              placeholder=""
+              maxlength="35"
+              className="ltr "
+              value={this.state.website}
+              onInput={(e) => {
+                this.setState({ website: e.target.value});
+              }}
+              />
+
+
+          <ListInput
+            label={dict.city}
+            type="text"
+            placeholder=""
+            maxlength="35"
+            value={this.state.city}
+            onInput={(e) => {
+              this.setState({ city: e.target.value});
+            }}
+            />
+
+          <li class="">
+            <span className="custom-label ">{dict.province}</span>
+          </li>
+          <ListItem>
+            <select name="province" value={this.state.province_id} onChange={this.change} className='custom-select'>
+              {this.provinceItems()}
+            </select>
+          </ListItem>
+
           <ListInput
             label={dict.address}
             type="textarea"
@@ -325,6 +417,14 @@ export default class EditCamAdvert extends Component {
               this.setState({ address: e.target.value});
             }}
             />
+
+            <li>
+              <div class="item-content item-input">
+                <div class="item-inner">
+                  <div class="item-title item-label"></div>
+                </div>
+              </div>
+            </li>
         </List>
 
         <Block>

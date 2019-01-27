@@ -26,6 +26,7 @@ import {
 
 import * as MyActions from "../../actions/MyActions";
 import UserStore from "../../stores/UserStore";
+import MyStore from "../../stores/MyStore";
 import { dict} from '../Dict';
 
 export default class SignUp extends React.Component {
@@ -33,11 +34,16 @@ export default class SignUp extends React.Component {
     super(props);
     this.logged_in = this.logged_in.bind(this);
     this.sign_up_fail = this.sign_up_fail.bind(this);
+    this.getProvinces = this.getProvinces.bind(this);
+    this.change = this.change.bind(this);
+
     this.state = {
       username: '',
       password: '',
       password_confirmation: '',
-      name: ''
+      name: '',
+      provinces: [],
+      province_id: 'b10feba7-367b-43b5-a31e-47aa5a4a8d13'
     };
   }
 
@@ -45,11 +51,17 @@ export default class SignUp extends React.Component {
   componentWillMount() {
     UserStore.on("logged_in", this.logged_in);
     UserStore.on("sign_up_fail", this.sign_up_fail);
+    MyStore.on("show_provinces", this.getProvinces);
   }
 
   componentWillUnmount() {
     UserStore.removeListener("logged_in", this.logged_in);
     UserStore.removeListener("sign_up_fail", this.sign_up_fail);
+    MyStore.removeListener("show_provinces", this.getProvinces);
+  }
+
+  componentDidMount(){
+    MyActions.getProvinces();
   }
 
   logged_in() {
@@ -86,6 +98,25 @@ export default class SignUp extends React.Component {
     MyActions.sign_up(this.state);
   }
 
+  getProvinces(){
+    var provinces = MyStore.getProvinces();
+    this.setState({provinces: provinces});
+  }
+
+  provinceItems(){
+    var length = this.state.provinces.length;
+    let items = []
+    for (let i = 0; i < length; i++) {
+      console.log(this.state.provinces[i].id);
+      items.push(<option value={this.state.provinces[i].id} >{this.state.provinces[i].name}</option>);
+    }
+    return items
+  }
+
+  change(e){
+    this.setState({province_id: e.target.value});
+  }
+
   render() {
     return (
       <Page loginScreen>
@@ -93,36 +124,44 @@ export default class SignUp extends React.Component {
         <LoginScreenTitle>{dict.sign_up}</LoginScreenTitle>
         <List form>
           <ListInput
-            label=''
+            label={dict.username}
             type="tel"
-            placeholder={dict.username}
+            placeholder=""
             value={this.state.username}
             onInput={(e) => {
               this.setState({ username: e.target.value});
             }}
             />
           <ListInput
-            label=''
+            label={dict.name}
             type="text"
-            placeholder={dict.name}
+            placeholder=""
             value={this.state.name}
             onInput={(e) => {
               this.setState({ name: e.target.value});
             }}
             />
+          <li class="">
+            <span className="custom-label ">{dict.province}</span>
+          </li>
+          <ListItem>
+            <select name="province_id" value={this.state.province_id} onChange={this.change} className='custom-select'>
+              {this.provinceItems()}
+            </select>
+          </ListItem>
           <ListInput
-            label=''
+            label={dict.password}
             type="password"
-            placeholder={dict.password}
+            placeholder=""
             value={this.state.password}
             onInput={(e) => {
               this.setState({ password: e.target.value});
             }}
             />
           <ListInput
-            label=''
+            label={dict.password_confirmation}
             type="password"
-            placeholder={dict.password_confirmation}
+            placeholder=""
             value={this.state.password_confirmation}
             onInput={(e) => {
               this.setState({ password_confirmation: e.target.value});

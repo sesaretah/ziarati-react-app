@@ -108,7 +108,7 @@ export default class Message extends React.Component {
 
   render() {
     return (
-      <Page loginScreen>
+      <Page >
         <Navbar>
           <NavTitle>
             <img src={logo} alt="Logo" className="logo" />

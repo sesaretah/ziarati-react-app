@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Page, Navbar, Block, Link, Toolbar, Swiper, SwiperSlide, BlockTitle, List, ListInput, Row, Button, Col, NavTitle, Segmented, Progressbar } from 'framework7-react';
+import { Page, Navbar, Block, Link, Toolbar, Swiper, SwiperSlide, BlockTitle, List, ListInput, Row, Button, Col, NavTitle, Segmented, Progressbar, ListItem } from 'framework7-react';
 
 import * as MyActions from "../../actions/MyActions";
 import ProfileStore from "../../stores/ProfileStore";
@@ -31,11 +31,18 @@ export default class NewCamAdvert extends Component {
       email: '',
       telegram_channel: '',
       instagram_page: '',
-      website: ''
+      website: '',
+      province_id: '',
+      mobile: '',
+      price: '',
+      uploading: false,
+      provinces: []
     };
     this.submit = this.submit.bind(this);
     this.fill_profile = this.fill_profile.bind(this);
     this.getAdvertisement = this.getAdvertisement.bind(this);
+    this.getProvinces = this.getProvinces.bind(this);
+    this.change = this.change.bind(this);
 
   }
 
@@ -95,7 +102,8 @@ export default class NewCamAdvert extends Component {
         var ft = new window.FileTransfer();
         ft.onprogress = function(progressEvent) {
           var i = t.state.images.indexOf(image)
-
+          t.setState({uploading: true});
+          console.log(t.state.uploading);
           if (progressEvent.lengthComputable) {
             t.state.progress[i] =  (progressEvent.loaded / progressEvent.total) * 100;
             t.forceUpdate()
@@ -108,6 +116,8 @@ export default class NewCamAdvert extends Component {
 
         function onSuccess(r) {
           var response = JSON.parse(r.response)
+          t.setState({uploading: false});
+          console.log(t.state.uploading);
           t.setState({
             uploaded: t.state.uploaded.concat(response.id)
           });
@@ -126,6 +136,7 @@ export default class NewCamAdvert extends Component {
 
 
   componentDidMount(){
+    MyActions.getProvinces();
     console.log(this.state);
     if(this.state.token) {
       MyActions.getProfile(this.state.token);
@@ -145,11 +156,13 @@ export default class NewCamAdvert extends Component {
   componentWillMount() {
     ProfileStore.on("show_profile", this.fill_profile);
     MyStore.on("show_advertisement", this.getAdvertisement);
+    MyStore.on("show_provinces", this.getProvinces);
   }
 
   componentWillUnmount() {
     ProfileStore.removeListener("show_profile", this.fill_profile);
     MyStore.removeListener("show_advertisement", this.getAdvertisement);
+    MyStore.removeListener("show_provinces", this.getProvinces);
   }
 
   getAdvertisement() {
@@ -165,10 +178,10 @@ export default class NewCamAdvert extends Component {
     for (let i = 0; i < this.state.thumbs.length; i++) {
       items.push(
         <div class='w-100'>
-        <img src={this.state.thumbs[i]} className="thumb" alt="picture" />
-        <Progressbar progress={this.state.progress[i]} id="demo-inline-progressbar" class='center'></Progressbar>
+          <img src={this.state.thumbs[i]} className="thumb" alt="picture" />
+          <Progressbar progress={this.state.progress[i]} id="demo-inline-progressbar" class='center'></Progressbar>
         </div>
-    );
+      );
     }
     return items
   }
@@ -177,26 +190,55 @@ export default class NewCamAdvert extends Component {
     var profile = ProfileStore.getProfile();
     this.setState({
       phone_number: profile.phone_number,
+      mobile: profile.mobile,
       address: profile.address,
       city: profile.city,
       email: profile.email,
       telegram_channel: profile.telegram_channel,
       instagram_page: profile.instagram_page,
-      website: profile.website
+      website: profile.website,
+      province_id: profile.province_id
     });
   }
 
   submit() {
-    if (this.state.title && this.state.content && this.state.phone_number) {
-    MyActions.createAdvertisement(this.state);
-  } else {
     const self = this;
     const app = self.$f7;
     const router = self.$f7router;
-    app.dialog.alert(dict.adverts_nes, dict.error, () => {
+    if (this.state.title && this.state.content && this.state.phone_number) {
+      if (this.state.uploading){
+        app.dialog.confirm(dict.uploading_in_progress, function () {
+          MyActions.createAdvertisement(this.state);
+        });
+      } else {
+        MyActions.createAdvertisement(this.state);
+      }
 
-    });
+
+    } else {
+
+      app.dialog.alert(dict.adverts_nes, dict.error, () => {
+
+      });
+    }
   }
+
+  getProvinces(){
+    var provinces = MyStore.getProvinces();
+    this.setState({provinces: provinces});
+  }
+
+  provinceItems(){
+    var length = this.state.provinces.length;
+    let items = []
+    for (let i = 0; i < length; i++) {
+      items.push(<option value={this.state.provinces[i].id}>{this.state.provinces[i].name}</option>);
+    }
+    return items
+  }
+
+  change(e){
+    this.setState({province_id: e.target.value});
   }
 
   render() {
@@ -232,6 +274,18 @@ export default class NewCamAdvert extends Component {
             />
 
           <ListInput
+            label={dict.price}
+            type="tel"
+            maxlength="70"
+            placeholder= ""
+            value={this.state.price}
+            onInput={(e) => {
+              this.setState({ price: e.target.value});
+            }}
+            />
+
+
+          <ListInput
             label={dict.phone_number}
             type="tel"
             maxlength="70"
@@ -239,6 +293,17 @@ export default class NewCamAdvert extends Component {
             value={this.state.phone_number}
             onInput={(e) => {
               this.setState({ phone_number: e.target.value});
+            }}
+            />
+
+          <ListInput
+            label={dict.mobile}
+            type="tel"
+            maxlength="70"
+            placeholder= {dict.pmobile}
+            value={this.state.mobile}
+            onInput={(e) => {
+              this.setState({ mobile: e.target.value});
             }}
             />
 
@@ -279,6 +344,38 @@ export default class NewCamAdvert extends Component {
             />
 
           <ListInput
+            label={dict.website}
+            type="text"
+            placeholder=""
+            maxlength="35"
+            className="ltr "
+            value={this.state.website}
+            onInput={(e) => {
+              this.setState({ website: e.target.value});
+            }}
+            />
+
+          <ListInput
+            label={dict.city}
+            type="text"
+            placeholder=""
+            maxlength="35"
+            value={this.state.city}
+            onInput={(e) => {
+              this.setState({ city: e.target.value});
+            }}
+            />
+
+          <li class="">
+            <span className="custom-label ">{dict.province}</span>
+          </li>
+          <ListItem>
+            <select name="province" value={this.state.province_id} onChange={this.change} className='custom-select'>
+              {this.provinceItems()}
+            </select>
+          </ListItem>
+
+          <ListInput
             label={dict.address}
             type="textarea"
             maxlength="300"
@@ -288,6 +385,13 @@ export default class NewCamAdvert extends Component {
               this.setState({ address: e.target.value});
             }}
             />
+          <li>
+            <div class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-title item-label"></div>
+              </div>
+            </div>
+          </li>
         </List>
 
         <Block>

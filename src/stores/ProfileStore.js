@@ -13,6 +13,7 @@ class ProfileStore extends EventEmitter {
     this.telegram_channel = '';
     this.instagram_page = '';
     this.website = '';
+    this.province_id= '';
   }
 
   show_profile(profile){
@@ -25,6 +26,7 @@ class ProfileStore extends EventEmitter {
     this.telegram_channel = profile.telegram_channel;
     this.instagram_page = profile.instagram_page;
     this.website = profile.website;
+    this.province_id = profile.province_id;
     this.emit("show_profile");
   }
 

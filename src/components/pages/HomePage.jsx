@@ -30,6 +30,8 @@ import MessageStore from "../../stores/MessageStore";
 import { dict} from '../Dict';
 import AdvertCard from './AdvertCard';
 import logo from  "../../images/logo.png";
+import Moment from 'react-moment';
+import 'moment-timezone';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -41,11 +43,17 @@ export default class HomePage extends React.Component {
     this.getAdvertisements = this.getAdvertisements.bind(this);
     this.getUnseens = this.getUnseens.bind(this);
     this.onBackKeyDown = this.onBackKeyDown.bind(this);
+    if (window.cordova){
+      var uuid = window.device.uuid
+    } else {
+      var uuid = ''
+    }
     this.state = {
       advertisements: MyStore.getAll(),
       token: window.localStorage.getItem('token'),
       unseens: 0,
       query: '',
+      uuid: uuid,
       allowInfinite: true,
       showPreloader: true,
       page: 1
@@ -68,8 +76,26 @@ export default class HomePage extends React.Component {
     document.addEventListener('backbutton', this.onBackKeyDown, false);
     MyActions.getAdvertisements(this.state);
     MyActions.getAllUnseens(this.state.token);
+    if (window.cordova){
+    MyActions.updateFCM(this.state.token, this.state.uuid);
   }
 
+  }
+/*  RegisterWithFCM() {
+    try {
+      if (window.FirebasePlugin == null) {
+        alert("FCMPlugin is null")
+        return;
+      }
+      window.FirebasePlugin.getToken(function (token) {
+        alert(token);
+      });
+    }
+    catch (e) {
+      alert(e);
+    }
+  }
+*/
   onBackKeyDown() {
     const self = this;
     const app = self.$f7;
@@ -139,7 +165,7 @@ export default class HomePage extends React.Component {
     var length = this.state.advertisements.length;
     let items = []
     for (let i = 0; i < length; i++) {
-      items.push(<ListItem swipeout
+      items.push(<ListItem
         link={'/adverts/' + this.state.advertisements[i].id}
         title={this.state.advertisements[i].title}
         after=""
@@ -147,7 +173,7 @@ export default class HomePage extends React.Component {
         text={this.state.advertisements[i].content}
         >
         <img slot="media" src={this.state.advertisements[i].cover} width="80" />
-        <span class="price">{this.state.advertisements[i].price}</span>
+        <span class="price text-muted"><Moment fromNow ago>{this.state.advertisements[i].updated_at}</Moment> {dict.ago}</span>
       </ListItem>);
     }
     return items

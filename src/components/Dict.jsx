@@ -40,4 +40,11 @@ export const dict = {
   'send_message': 'پیام خود را بنویسید',
   'conversations_on_other_ads': 'پیام ها بر روی آگهی های دیگران',
   'conversations_on_your_ads': 'پیام ها بر آگهی های شما',
+  'province': 'استان',
+  'city': 'شهر',
+  'website': 'وبسایت',
+  'call': 'تماس بگیرید',
+  'price': 'قیمت ',
+  'uploading_in_progress': ' بارگذاری عکس  در حال انجام است. آیا می خواهید به هر ترتیب ارسال شود.',
+  'ago': 'قبل '
 };

@@ -19,6 +19,7 @@ import './css/icons.css';
 
 // Custom app styles
 import './css/app.css';
+import 'moment/locale/fa';
 
 // Init Framework7-React plugin
 Framework7.use(Framework7React);
