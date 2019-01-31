@@ -1,7 +1,7 @@
 import dispatcher from "../dispatcher";
 import axios from 'axios';
-//const server='http://localhost:3000/api';
-const server='http://sanatik.ir/api';
+const server='http://localhost:3000/api';
+//const server='http://sanatik.ir/api';
 //const server='http://sanatik.ir:3000/api';
 
 export function createTodo(text) {
@@ -24,6 +24,19 @@ export function getCategories(id) {
     dispatcher.dispatch({
       type: "SHOW_CATEGORIES",
       categories: response.data.categories,
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function getCategory(id) {
+  axios.get(server + '/category/'+id)
+  .then(function (response) {
+    dispatcher.dispatch({
+      type: "SHOW_CATEGORY",
+      categories: response.data.category,
     });
   })
   .catch(function (error) {
@@ -278,8 +291,8 @@ export function sign_up(data) {
   });
 }
 
-export function getAdvertisements(data) {
-  axios.get(server + '/advertisements?page='+data.page)
+export function getAdvertisements(data, categoryId) {
+  axios.get(server + '/advertisements?page='+data.page+'&category_id='+categoryId)
   .then(function (response) {
     console.log(response);
     dispatcher.dispatch({

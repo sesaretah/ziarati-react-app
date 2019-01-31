@@ -28,6 +28,7 @@ import * as MyActions from "../../actions/MyActions";
 import UserStore from "../../stores/UserStore";
 import MyStore from "../../stores/MyStore";
 import { dict} from '../Dict';
+import logo from  "../../images/logo.png";
 
 export default class SignUp extends React.Component {
   constructor(props) {
@@ -119,8 +120,13 @@ export default class SignUp extends React.Component {
 
   render() {
     return (
-      <Page loginScreen>
-        <Navbar title={dict.back} backLink="Back"></Navbar>
+      <Page>
+        <Navbar>
+            <Link href='/'><i class="f7-icons color-white">chevron_right</i></Link>
+          <NavTitle>
+            <img src={logo} alt="Logo" className="logo" />
+          </NavTitle>
+        </Navbar>
         <LoginScreenTitle>{dict.sign_up}</LoginScreenTitle>
         <List form>
           <ListInput

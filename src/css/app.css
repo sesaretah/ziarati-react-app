@@ -96,8 +96,12 @@
 }
 
 .gray {
-  background-color: #ececec !important;
+  background-color: #ececec91 !important;
 }
+.ios .searchbar input[type="search"], .ios .searchbar input[type="text"] {
+    background-color: #ececec !important;
+ }
+
 
 .ios .list textarea {
   padding-right: 10px;
@@ -165,7 +169,7 @@ background-color: inherit !important;
 
 .logo {
   width: 30px;
-  float: left;
+  float: right;
 }
 
 .title {
@@ -178,16 +182,16 @@ background-color: inherit !important;
 
 
 .ios .navbar {
-  background: #366a9c;
+  background: #4972ec;
 }
 
 .ios .toolbar:not(.messagebar).color-blue {
-  background: #366a9c;
+  background: #4972ec;
 }
 
 .searchbar {
-  width: 90%;
-  background: #366a9c !important;
+  width: 95%;
+  background: #4972ec !important;
 }
 .price {
   float: left;
@@ -206,7 +210,7 @@ background-color: inherit !important;
 }
 
 .ios .searchbar:after {
-  background-color: #366a9c;
+  background-color: #4972ec;
 }
 
 .ios .navbar {
@@ -307,4 +311,18 @@ font-style: oblique;
 
 .ios .list .item-text {
 min-height: 42px;
+}
+.color-white {
+  color: #fff;
+}
+
+.page-previous {
+    display: none;
+}
+
+.custom-category {
+  display: inline-flex;
+vertical-align: 5px;
+padding-right: 10px;
+font-size: 16px;
 }

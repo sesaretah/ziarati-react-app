@@ -27,6 +27,7 @@ import {
 import * as MyActions from "../../actions/MyActions";
 import MyStore from "../../stores/MyStore";
 import MessageStore from "../../stores/MessageStore";
+import CategoryStore from "../../stores/CategoryStore";
 import { dict} from '../Dict';
 import AdvertCard from './AdvertCard';
 import logo from  "../../images/logo.png";
@@ -42,6 +43,7 @@ export default class HomePage extends React.Component {
     super();
     this.getAdvertisements = this.getAdvertisements.bind(this);
     this.getUnseens = this.getUnseens.bind(this);
+    this.getCategory = this.getCategory.bind(this);
     if (window.cordova){
       var uuid = window.device.uuid
     } else {
@@ -52,6 +54,7 @@ export default class HomePage extends React.Component {
       token: window.localStorage.getItem('token'),
       unseens: 0,
       query: '',
+      categories: [],
       uuid: uuid,
       allowInfinite: true,
       showPreloader: true,
@@ -63,21 +66,36 @@ export default class HomePage extends React.Component {
     MyStore.on("change", this.getAdvertisements);
     MyStore.on("load", this.getAdvertisements);
     MessageStore.on("unseens", this.getUnseens);
+    CategoryStore.on("show_category", this.getCategory);
   }
 
   componentWillUnmount() {
     MyStore.removeListener("change", this.getAdvertisements);
     MyStore.removeListener("load", this.getAdvertisements);
     MessageStore.removeListener("unseens", this.getUnseens);
+    CategoryStore.removeListener("show_category", this.getCategory);
   }
 
   componentDidMount(){
-    MyActions.getAdvertisements(this.state);
+    var categoryId = this.$f7route.query.category_id
+    if (categoryId) {
+      MyActions.getAdvertisements(this.state, categoryId);
+      MyActions.getCategory(categoryId);
+    } else {
+      MyActions.getAdvertisements(this.state, '');
+    }
+
     MyActions.getAllUnseens(this.state.token);
     if (window.cordova){
-    MyActions.updateFCM(this.state.token, this.state.uuid);
+      MyActions.updateFCM(this.state.token, this.state.uuid);
+    }
+
   }
 
+  getCategory(){
+    this.setState({
+      categories: CategoryStore.getAll(),
+    });
   }
 
   getAdvertisements() {
@@ -88,7 +106,7 @@ export default class HomePage extends React.Component {
 
   reloadAdvertisements(event, done) {
     this.setState({page: 1},  function() {
-      MyActions.getAdvertisements(this.state);
+      MyActions.getAdvertisements(this.state, '');
       done();
     });
 
@@ -156,6 +174,15 @@ export default class HomePage extends React.Component {
     });
   }
 
+  category(){
+    if (this.state.categories && this.state.categories[0]){
+      return(<div>
+        <Link onClick={() => this.$f7router.navigate('/categories/' + this.state.categories[0].parent_id)}><i class="f7-icons">chevron_right</i></Link>
+        <div class='custom-category '>{this.state.categories[0].title}</div>
+      </div>);
+    }
+  }
+
 
 
   render() {
@@ -172,10 +199,7 @@ export default class HomePage extends React.Component {
         infinitePreloader={this.state.showPreloader}
         onInfinite={this.loadMore.bind(this)}
         >
-        <Navbar id='home'>
-          <NavTitle>
-            <img src={logo} alt="Logo" className="logo" />
-          </NavTitle>
+        <Navbar>
           <form class="searchbar">
             <div class="searchbar-inner">
               <div class="searchbar-input-wrap">
@@ -190,15 +214,22 @@ export default class HomePage extends React.Component {
               <span class="searchbar-disable-button"></span>
             </div>
           </form>
+          <NavTitle>
+            <img src={logo} alt="Logo" className="logo" />
+          </NavTitle>
         </Navbar>
+        <Block>
+          {this.category()}
+        </Block>
+
         <List mediaList>
           {this.createItem()}
         </List>
 
         <Toolbar tabbar labels color="blue" bottomMd={true}>
-          <Link href="/categories/0"><i class="f7-icons">data</i></Link>
-          <Link href="/new_cam_advert/"><i class="f7-icons">add_round</i></Link>
-          <Link href="/"><i class="f7-icons">home</i></Link>
+          <Link href="/categories/0"><i class="f7-icons">data_fill</i></Link>
+          <Link href="/new_cam_advert/"><i class="f7-icons">add_round_fill</i></Link>
+          <Link href="/"><i class="icon f7-icons">home_fill</i></Link>
           <Link href="/login/">
             <i class="icon f7-icons ios-only">
               person_round

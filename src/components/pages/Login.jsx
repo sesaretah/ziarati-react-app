@@ -221,8 +221,9 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <Page loginScreen>
+      <Page >
         <Navbar>
+            <Link href='/'><i class="f7-icons color-white">chevron_right</i></Link>
           <NavTitle>
             <img src={logo} alt="Logo" className="logo" />
           </NavTitle>

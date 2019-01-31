@@ -98,17 +98,17 @@ export default class MyAdverts extends React.Component {
 
   render() {
     return (
-      <Page loginScreen>
+      <Page>
         <Navbar>
+          <Link href='/login/'><i class="f7-icons color-white">chevron_right</i></Link>
           <NavTitle>
             <img src={logo} alt="Logo" className="logo" />
           </NavTitle>
         </Navbar>
-        <Block>
+
           <List mediaList>
             {this.createItem()}
           </List>
-        </Block>
 
         <Toolbar tabbar labels color="blue" bottomMd={true}>
           <Link href="#tab-1"><i class="f7-icons">data</i></Link>

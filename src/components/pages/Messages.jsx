@@ -110,6 +110,7 @@ export default class Message extends React.Component {
     return (
       <Page >
         <Navbar>
+          <Link href='/login/'><i class="f7-icons color-white">chevron_right</i></Link>
           <NavTitle>
             <img src={logo} alt="Logo" className="logo" />
           </NavTitle>

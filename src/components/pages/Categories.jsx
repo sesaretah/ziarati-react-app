@@ -80,16 +80,54 @@ export default class Categories extends React.Component {
     var length = this.state.categories.length;
     let items = []
     for (let i = 0; i < length; i++) {
-      items.push(<ListItem
-        link={'/categories/' + this.state.categories[i].id}
-        title={this.state.categories[i].title}
-        after=""
-        subtitle=""
-        text={this.state.categories[i].content}
-        >
-      </ListItem>);
+      if (this.state.categories[i].has_child) {
+        items.push(<ListItem
+          link='#'
+          onClick={() => this.$f7router.navigate('/categories/' + this.state.categories[i].id)}
+          title={this.state.categories[i].title}
+          after=""
+          subtitle=""
+          text={this.state.categories[i].content}
+          >
+        </ListItem>);
+      } else {
+        items.push(<ListItem
+          link='#'
+          onClick={() => this.$f7router.navigate('/?category_id=' + this.state.categories[i].id)}
+          title={this.state.categories[i].title}
+          after=""
+          subtitle=""
+          text={this.state.categories[i].content}
+          >
+        </ListItem>);
+      }
+
     }
+
+    items.push(<ListItem
+      link='#'
+      onClick={() => this.$f7router.navigate('/?category_id=' + this.$f7route.params['categoryId'])}
+      title={dict.all_above}
+      after=""
+      subtitle=""
+      text={dict.all}
+      >
+    </ListItem>);
     return items
+  }
+
+  link(){
+    if (this.state.categories[0]){
+      if(this.state.categories[0].parent_id != '0') {
+        return(<Link onClick={() => this.$f7router.navigate('/categories/' + this.state.categories[0].parent_id)}><i class="f7-icons color-white">chevron_right</i></Link>);
+      } else {
+        if ( this.$f7route.params['categoryId'] != '0'){
+        return(<Link onClick={() => this.$f7router.navigate('/categories/0')}><i class="f7-icons color-white">chevron_right</i></Link>);
+      } else {
+        return(<Link onClick={() => this.$f7router.navigate('/')}><i class="f7-icons color-white">chevron_right</i></Link>);
+      }
+      }
+    }
   }
 
 
@@ -97,12 +135,12 @@ export default class Categories extends React.Component {
     return(
       <Page>
         <Navbar>
+          {this.link()}
           <NavTitle>
             <img src={logo} alt="Logo" className="logo" />
           </NavTitle>
-          <Link onClick={() => this.$f7router.back()}>Go Back</Link>
         </Navbar>
-        
+
         <List mediaList>
           {this.createItem()}
         </List>
