@@ -54,7 +54,7 @@ export default function (props) {
 
 
       {/* Main View */}
-      <View id="main-view" url="/" main className="ios-edges"/>
+      <View id="main-view" url="/" iosDynamicNavbar={false} pushState={true} pushStateRoot={document.location.pathname} main className="ios-edges"/>
 
     </App>
   );

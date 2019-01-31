@@ -42,7 +42,6 @@ export default class HomePage extends React.Component {
     super();
     this.getAdvertisements = this.getAdvertisements.bind(this);
     this.getUnseens = this.getUnseens.bind(this);
-    this.onBackKeyDown = this.onBackKeyDown.bind(this);
     if (window.cordova){
       var uuid = window.device.uuid
     } else {
@@ -73,40 +72,12 @@ export default class HomePage extends React.Component {
   }
 
   componentDidMount(){
-    document.addEventListener('backbutton', this.onBackKeyDown, false);
     MyActions.getAdvertisements(this.state);
     MyActions.getAllUnseens(this.state.token);
     if (window.cordova){
     MyActions.updateFCM(this.state.token, this.state.uuid);
   }
 
-  }
-/*  RegisterWithFCM() {
-    try {
-      if (window.FirebasePlugin == null) {
-        alert("FCMPlugin is null")
-        return;
-      }
-      window.FirebasePlugin.getToken(function (token) {
-        alert(token);
-      });
-    }
-    catch (e) {
-      alert(e);
-    }
-  }
-*/
-  onBackKeyDown() {
-    const self = this;
-    const app = self.$f7;
-    const router = self.$f7router;
-    if (router.url == '/') {
-      console.log();
-      router.navigate('/');
-    } else {
-      document.removeEventListener('backbutton', this.onBackKeyDown, false);
-      router.back();
-    }
   }
 
   getAdvertisements() {
@@ -188,15 +159,11 @@ export default class HomePage extends React.Component {
 
 
   render() {
-    console.log(this.$f7route);
     const { advertisements } = this.state;
 
     const AdvertisementsComponents = function () {
       return this.createCard();
     };
-    // advertisements.map((todo) => {
-    //  return <ListItem title={todo.id}></ListItem>;
-    //  });
 
     return(
       <Page colorTheme="blue" className="gray" ptr onPtrRefresh={this.reloadAdvertisements.bind(this)}
@@ -205,7 +172,7 @@ export default class HomePage extends React.Component {
         infinitePreloader={this.state.showPreloader}
         onInfinite={this.loadMore.bind(this)}
         >
-        <Navbar>
+        <Navbar id='home'>
           <NavTitle>
             <img src={logo} alt="Logo" className="logo" />
           </NavTitle>
@@ -229,7 +196,7 @@ export default class HomePage extends React.Component {
         </List>
 
         <Toolbar tabbar labels color="blue" bottomMd={true}>
-          <Link href="#tab-1"><i class="f7-icons">data</i></Link>
+          <Link href="/categories/0"><i class="f7-icons">data</i></Link>
           <Link href="/new_cam_advert/"><i class="f7-icons">add_round</i></Link>
           <Link href="/"><i class="f7-icons">home</i></Link>
           <Link href="/login/">

@@ -38,4 +38,15 @@ if(!window.cordova) {
   startApp()
 } else {
   document.addEventListener('deviceready', startApp, false)
+  function onDeviceReady(){
+    document.addEventListener("backbutton", function(e){
+      if(window.location.hash=='#!/'){
+        e.preventDefault();
+        navigator.app.exitApp();
+      } else {
+        navigator.app.backHistory()
+      }
+    }, false);
+  }
+  document.addEventListener("deviceready", onDeviceReady, false);
 }

@@ -19,7 +19,6 @@ export default class AdvertShow extends Component {
     this.liked = this.liked.bind(this);
     this.disliked = this.disliked.bind(this);
     this.getRoom = this.getRoom.bind(this);
-    this.onBackKeyDown = this.onBackKeyDown.bind(this);
     this.swiperRef = React.createRef();
     if (window.cordova){
       var uuid = window.device.uuid
@@ -78,25 +77,9 @@ export default class AdvertShow extends Component {
     MyActions.liked(this.$f7route.params['advertId'], this.state.uuid, this.state.token);
     MyActions.getAdvertisement(this.$f7route.params['advertId'], this.state.token);
     MyActions.getUserRooms(this.$f7route.params['advertId'], this.state.token);
-    document.addEventListener('backbutton', this.onBackKeyDown, false);
     const swiper = this.swiperRef.current.swiper;
     swiper.update();
   }
-
-  onBackKeyDown() {
-    const self = this;
-    const app = self.$f7;
-    const router = self.$f7router;
-    if (router.url == '/') {
-      console.log();
-      router.navigate('/');
-    } else {
-      document.removeEventListener('backbutton', this.onBackKeyDown, false);
-      router.navigate('/');
-    }
-  }
-
-
 
 
   getAdvertisement() {

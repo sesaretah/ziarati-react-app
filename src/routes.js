@@ -17,6 +17,7 @@ import Messages from './components/pages/Messages';
 import Rooms from './components/pages/Rooms';
 import MyAdverts from './components/pages/MyAdverts';
 import MyPins from './components/pages/MyPins';
+import Categories from './components/pages/Categories';
 
 export default [
   {
@@ -74,6 +75,10 @@ export default [
   {
     path: '/rooms/:advertId',
     component: Rooms,
+  },
+  {
+    path: '/categories/:categoryId',
+    component: Categories,
   },
   {
     path: '/dynamic-route/blog/:blogId/post/:postId/',

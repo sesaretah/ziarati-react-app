@@ -30,7 +30,7 @@ export default class FormPage extends React.Component {
 
   handleSubmit(event) {
     console.log(this.state);
-    MyActions.createAgency(this.state);
+    //MyActions.createAgency(this.state);
   }
 
   render() {

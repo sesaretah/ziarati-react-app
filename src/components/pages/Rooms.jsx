@@ -36,7 +36,6 @@ export default class Message extends React.Component {
   constructor(props) {
     super(props);
     this.getRooms = this.getRooms.bind(this)
-    this.onBackKeyDown = this.onBackKeyDown.bind(this);
     this.state = {
       rooms: [],
       advertId: this.$f7route.params['advertId'],
@@ -53,22 +52,8 @@ export default class Message extends React.Component {
   }
 
   componentDidMount(){
-    document.addEventListener('backbutton', this.onBackKeyDown, false);
     MyActions.getRooms(this.state.advertId, this.state.token);
   }
-
-  onBackKeyDown() {
-    const self = this;
-    const app = self.$f7;
-    const router = self.$f7router;
-    if (router.url == '/') {
-      router.navigate('/');
-    } else {
-      document.removeEventListener('backbutton', this.onBackKeyDown, false);
-      router.back();
-    }
-  }
-
 
   getRooms(){
     var rooms = MessageStore.getRooms();

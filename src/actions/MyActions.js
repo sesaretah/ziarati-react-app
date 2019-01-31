@@ -18,19 +18,20 @@ export function deleteTodo(id) {
   });
 }
 
-export function createAgency(data) {
-  //console.log(data);
-  axios.post(server + '/agencies', JSON.stringify(data), { headers: {'Content-Type': 'application/json', } })
+export function getCategories(id) {
+  axios.get(server + '/categories?parent_id='+id)
   .then(function (response) {
     dispatcher.dispatch({
-      type: "CREATE_AGENCY",
-      id: response.id,
+      type: "SHOW_CATEGORIES",
+      categories: response.data.categories,
     });
   })
   .catch(function (error) {
     console.log(error);
   });
 }
+
+
 
 export function updateFCM(token, uuid) {
   window.FirebasePlugin.getToken(function (fcm_token) {
