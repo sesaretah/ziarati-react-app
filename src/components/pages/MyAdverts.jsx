@@ -100,7 +100,9 @@ export default class MyAdverts extends React.Component {
     return (
       <Page>
         <Navbar>
-          <Link href='/login/'><i class="f7-icons color-white">chevron_right</i></Link>
+          <Link href='/login/'><i class="f7-icons color-white">chevron_right</i>
+          <div class='custom-category color-white'>{dict.back}</div>
+        </Link>
           <NavTitle>
             <img src={logo} alt="Logo" className="logo" />
           </NavTitle>
@@ -110,17 +112,17 @@ export default class MyAdverts extends React.Component {
             {this.createItem()}
           </List>
 
-        <Toolbar tabbar labels color="blue" bottomMd={true}>
-          <Link href="#tab-1"><i class="f7-icons">data</i></Link>
-          <Link href="/new_cam_advert/"><i class="f7-icons">add_round</i></Link>
-          <Link href="/"><i class="f7-icons">home</i></Link>
+          <Toolbar tabbar labels color="blue" bottomMd={true}>
+            <Link href="/categories/0"><i class="f7-icons">data_fill</i></Link>
+            <Link href="/new_cam_advert/"><i class="f7-icons">add_round_fill</i></Link>
+            <Link href="/"><i class="icon f7-icons">home_fill</i></Link>
             <Link href="/login/">
               <i class="icon f7-icons ios-only">
                 person_round
                 <span class="badge color-red">{this.state.unseens}</span>
               </i>
             </Link>
-        </Toolbar>
+          </Toolbar>
       </Page>
     )
   }

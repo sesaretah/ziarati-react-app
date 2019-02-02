@@ -35,7 +35,7 @@ import 'moment-timezone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 
-export default class Categories extends React.Component {
+export default class SubCategories extends React.Component {
 
   constructor() {
     super();
@@ -83,7 +83,7 @@ export default class Categories extends React.Component {
       if (this.state.categories[i].has_child) {
         items.push(<ListItem
           link='#'
-          onClick={() => this.$f7router.navigate('/subcategories/' + this.state.categories[i].id)}
+          onClick={() => this.$f7router.navigate('/subsubcategories/' + this.state.categories[i].id)}
           title={this.state.categories[i].title}
           after=""
           subtitle=""
@@ -119,20 +119,19 @@ export default class Categories extends React.Component {
   link(){
     if (this.state.categories[0]){
       if(this.state.categories[0].parent_id != '0') {
-        return(<Link onClick={() => this.$f7router.navigate('/categories/' + this.state.categories[0].parent_id)}>
-        <i class="f7-icons color-white">chevron_right</i>
-        <div class='custom-category color-white'>{dict.back}</div>
-      </Link>);
-    } else {
-      if ( this.$f7route.params['categoryId'] != '0'){
         return(
-          <Link onClick={() => this.$f7router.navigate('/categories/0')}><i class="f7-icons color-white">chevron_right</i>
+          <Link onClick={() => this.$f7router.navigate('/categories/' + this.state.categories[0].parent_id)}><i class="f7-icons color-white">chevron_right</i>
           <div class='custom-category color-white'>{dict.back}</div>
         </Link>);
       } else {
-        return(
-          <Link onClick={() => this.$f7router.navigate('/')}>
-            <i class="f7-icons color-white">chevron_right</i>
+        if ( this.$f7route.params['categoryId'] != '0'){
+          return(
+            <Link onClick={() => this.$f7router.navigate('/categories/0')}><i class="f7-icons color-white">chevron_right</i>
+            <div class='custom-category color-white'>{dict.back}</div>
+          </Link>);
+        } else {
+          return(
+            <Link onClick={() => this.$f7router.navigate('/')}><i class="f7-icons color-white">chevron_right</i>
             <div class='custom-category color-white'>{dict.back}</div>
           </Link>);
         }

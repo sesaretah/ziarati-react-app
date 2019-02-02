@@ -190,7 +190,7 @@ background-color: inherit !important;
 }
 
 .searchbar {
-  width: 95%;
+  width: 90%;
   background: #4972ec !important;
 }
 .price {
@@ -325,4 +325,7 @@ min-height: 42px;
 vertical-align: 5px;
 padding-right: 10px;
 font-size: 16px;
+}
+.mh-30 {
+min-height: 30px !important;
 }

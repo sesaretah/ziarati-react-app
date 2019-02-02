@@ -1,7 +1,7 @@
 import dispatcher from "../dispatcher";
 import axios from 'axios';
-const server='http://localhost:3000/api';
-//const server='http://sanatik.ir/api';
+//const server='http://localhost:3000/api';
+const server='http://sanatik.ir/api';
 //const server='http://sanatik.ir:3000/api';
 
 export function createTodo(text) {

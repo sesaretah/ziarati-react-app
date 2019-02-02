@@ -145,14 +145,19 @@ export default class Login extends React.Component {
               this.setState({ password: e.target.value});
             }}
             />
+            <li>
+              <div class="item-content item-input mh-30">
+              </div>
+            </li>
         </List>
         <List>
           <Block>
             <Button raised big fill  onClick={this.signIn.bind(this)}>{dict.sign_in}</Button>
           </Block>
-          <br />
+          <Block>
           <span> {dict.signed_up_already} </span>
           <Link href="/sign_up/">{dict.sign_up}</Link>
+          </Block>
         </List>
       </React.Fragment>
     );
@@ -223,7 +228,10 @@ export default class Login extends React.Component {
     return (
       <Page >
         <Navbar>
-            <Link href='/'><i class="f7-icons color-white">chevron_right</i></Link>
+            <Link href='/'>
+              <i class="f7-icons color-white">chevron_right</i>
+              <div class='custom-category color-white'>{dict.back}</div>
+            </Link>
           <NavTitle>
             <img src={logo} alt="Logo" className="logo" />
           </NavTitle>
@@ -231,15 +239,15 @@ export default class Login extends React.Component {
         {this.UserContent()}
 
         <Toolbar tabbar labels color="blue" bottomMd={true}>
-          <Link href="#tab-1"><i class="f7-icons">data</i></Link>
-          <Link href="/new_cam_advert/"><i class="f7-icons">add_round</i></Link>
-          <Link href="/"><i class="f7-icons">home</i></Link>
-            <Link href="/login/">
-              <i class="icon f7-icons ios-only">
-                person_round
-                <span class="badge color-red">{this.state.unseens}</span>
-              </i>
-            </Link>
+          <Link href="/categories/0"><i class="f7-icons">data_fill</i></Link>
+          <Link href="/new_cam_advert/"><i class="f7-icons">add_round_fill</i></Link>
+          <Link href="/"><i class="icon f7-icons">home_fill</i></Link>
+          <Link href="/login/">
+            <i class="icon f7-icons ios-only">
+              person_round
+              <span class="badge color-red">{this.state.unseens}</span>
+            </i>
+          </Link>
         </Toolbar>
       </Page>
     )

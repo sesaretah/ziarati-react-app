@@ -58,6 +58,7 @@ export default class HomePage extends React.Component {
       uuid: uuid,
       allowInfinite: true,
       showPreloader: true,
+      noResult: false,
       page: 1
     };
   }
@@ -99,9 +100,21 @@ export default class HomePage extends React.Component {
   }
 
   getAdvertisements() {
-    this.setState({
-      advertisements: MyStore.getAll(),
-    });
+    var advertisements = MyStore.getAll()
+    if (advertisements.length > 0){
+      this.setState({
+        advertisements: advertisements,
+        noResult: false,
+        showPreloader: false
+      });
+    } else {
+      this.setState({
+        advertisements: advertisements,
+        noResult: true,
+        showPreloader: false
+      });
+    }
+
   }
 
   reloadAdvertisements(event, done) {
@@ -177,9 +190,18 @@ export default class HomePage extends React.Component {
   category(){
     if (this.state.categories && this.state.categories[0]){
       return(<div>
-        <Link onClick={() => this.$f7router.navigate('/categories/' + this.state.categories[0].parent_id)}><i class="f7-icons">chevron_right</i></Link>
-        <div class='custom-category '>{this.state.categories[0].title}</div>
+        <Link onClick={() => this.$f7router.navigate('/categories/' + this.state.categories[0].parent_id)}>
+          <i class="f7-icons">chevron_right</i>
+          <div class='custom-category'>{dict.back}</div>
+      </Link>
+        <div class='custom-category'>{dict.category}: {this.state.categories[0].title}</div>
       </div>);
+    }
+  }
+
+  blankResult() {
+    if (this.state.noResult){
+      return(<Block strong>{dict.no_result}</Block>);
     }
   }
 
@@ -221,7 +243,7 @@ export default class HomePage extends React.Component {
         <Block>
           {this.category()}
         </Block>
-
+        {this.blankResult()}
         <List mediaList>
           {this.createItem()}
         </List>

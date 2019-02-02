@@ -97,7 +97,9 @@ export default class Chat extends React.Component {
       return (
         <Page>
           <Navbar>
-            <Link href='/messages/'><i class="f7-icons color-white">chevron_right</i></Link>
+            <Link href='/messages/'><i class="f7-icons color-white">chevron_right</i>
+            <div class='custom-category color-white'>{dict.back}</div>
+            </Link>
             <NavTitle>
               <img src={logo} alt="Logo" className="logo" />
             </NavTitle>
@@ -109,12 +111,6 @@ export default class Chat extends React.Component {
             attachmentsVisible={this.attachmentsVisible}
             sheetVisible={this.state.sheetVisible}
           >
-            <Link
-              iconIos="f7:camera_fill"
-              iconMd="material:camera_alt"
-              slot="inner-start"
-              onClick={() => {this.setState({sheetVisible: !this.state.sheetVisible})}}
-            ></Link>
             <Link
               iconIos="f7:arrow_up_fill"
               iconMd="material:send"
@@ -155,10 +151,15 @@ export default class Chat extends React.Component {
             )}
           </Messages>
           <Toolbar tabbar labels color="blue" bottomMd={true}>
-            <Link href="#tab-1"><i class="f7-icons">data</i></Link>
-            <Link href="/new_cam_advert/"><i class="f7-icons">add_round</i></Link>
-            <Link href="/"><i class="f7-icons">home</i></Link>
-            <Link href="/login/"><i class="f7-icons">person_round</i></Link>
+            <Link href="/categories/0"><i class="f7-icons">data_fill</i></Link>
+            <Link href="/new_cam_advert/"><i class="f7-icons">add_round_fill</i></Link>
+            <Link href="/"><i class="icon f7-icons">home_fill</i></Link>
+            <Link href="/login/">
+              <i class="icon f7-icons ios-only">
+                person_round
+                <span class="badge color-red">{this.state.unseens}</span>
+              </i>
+            </Link>
           </Toolbar>
         </Page>
       )

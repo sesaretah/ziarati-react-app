@@ -18,6 +18,8 @@ import Rooms from './components/pages/Rooms';
 import MyAdverts from './components/pages/MyAdverts';
 import MyPins from './components/pages/MyPins';
 import Categories from './components/pages/Categories';
+import SubCategories from './components/pages/SubCategories';
+import SubSubCategories from './components/pages/SubSubCategories';
 
 export default [
   {
@@ -79,6 +81,14 @@ export default [
   {
     path: '/categories/:categoryId',
     component: Categories,
+  },
+  {
+    path: '/subcategories/:categoryId',
+    component: SubCategories,
+  },
+  {
+    path: '/subsubcategories/:categoryId',
+    component: SubSubCategories,
   },
   {
     path: '/dynamic-route/blog/:blogId/post/:postId/',
