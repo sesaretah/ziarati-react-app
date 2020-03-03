@@ -1,35 +1,8 @@
 import dispatcher from "../dispatcher";
 import axios from 'axios';
 //const server='http://localhost:3000/api';
-const server='http://sanatik.ir/api';
+const server='http://95.156.255.115/api';
 //const server='http://sanatik.ir:3000/api';
-
-export function createTodo(text) {
-  dispatcher.dispatch({
-    type: "CREATE_TODO",
-    text,
-  });
-}
-
-export function deleteTodo(id) {
-  dispatcher.dispatch({
-    type: "DELETE_TODO",
-    id,
-  });
-}
-
-export function getCategories(id) {
-  axios.get(server + '/categories?parent_id='+id)
-  .then(function (response) {
-    dispatcher.dispatch({
-      type: "SHOW_CATEGORIES",
-      categories: response.data.categories,
-    });
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
 
 export function getCategory(id) {
   axios.get(server + '/category/'+id)
@@ -65,66 +38,6 @@ export function updateFCM(token, uuid) {
   });
 }
 
-export function createAdvertisement(data) {
-
-  axios.post(server + '/make_advertisement', JSON.stringify(data), { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + data.token } })
-  .then(function (response) {
-    dispatcher.dispatch({
-      type: "SHOW_ADVERTISEMENT",
-      advertisement: response.data,
-    });
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
-
-export function editAdvertisement(data) {
-  console.log(data);
-  axios.post(server + '/edit_advertisement', JSON.stringify(data), { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + data.token } })
-  .then(function (response) {
-    dispatcher.dispatch({
-      type: "EDIT_ADVERTISEMENT",
-      advertisement: response.data,
-    });
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
-
-export function createMessage(text, id ,token, room) {
-  var data = {content: text, room_id: room}
-  axios.post(server + '/new_message/'+id, JSON.stringify(data), { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
-  .then(function (response) {
-    if (response.data.message) {
-      dispatcher.dispatch({
-        type: "NEW_MESSAGE",
-        message: response.data.message,
-      });
-    }
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
-
-
-export function getMessages(id ,token, room, page) {
-  axios.get(server + '/messages/'+id+'?room_id='+room+'&page='+page, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
-  .then(function (response) {
-    if (response.data.messages) {
-      dispatcher.dispatch({
-        type: "ROOM_MESSAGES",
-        data: response.data,
-      });
-    }
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
-
 export function groupedMessages(token) {
   axios.get(server + '/grouped_messages', { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
   .then(function (response) {
@@ -140,68 +53,8 @@ export function groupedMessages(token) {
   });
 }
 
-export function adminGroupedMessages(token) {
-  axios.get(server + '/admin_grouped_messages', { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
-  .then(function (response) {
-    console.log(response);
-    if (response.data.result) {
-      dispatcher.dispatch({
-        type: "ADMIN_GROUP_MESSAGES",
-        data: response.data,
-      });
-    }
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
 
-export function getRooms(id, token) {
-  axios.get(server + '/rooms/'+id, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
-  .then(function (response) {
-    if (response.data.result) {
-      dispatcher.dispatch({
-        type: "ROOMS",
-        data: response.data,
-      });
-    }
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
 
-export function getUserRooms(id, token) {
-  axios.get(server + '/user_advert_room/'+id, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
-  .then(function (response) {
-    if (response.data.result) {
-      dispatcher.dispatch({
-        type: "ADVERT_ROOM",
-        data: response.data,
-      });
-    }
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
-
-export function roomSeen(room_id, token) {
-  if (room_id) {
-    axios.get(server + '/seen/'+room_id, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token } })
-    .then(function (response) {
-      if (response.data.result) {
-        dispatcher.dispatch({
-          type: "SEEN",
-          data: response.data,
-        });
-      }
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  }
-}
 
 export function getAllUnseens(token) {
   if (token) {
@@ -218,29 +71,6 @@ export function getAllUnseens(token) {
       console.log(error);
     });
   }
-}
-
-
-
-
-export function createTourPackage(data) {
-  var form_data = new FormData();
-
-  for ( var key in data ) {
-    console.log(key, data[key]);
-    form_data.append(key, data[key]);
-  }
-  console.log(data);
-  axios.post(server + '/tour_packages', form_data, { headers: {'Content-Type': 'multipart/form-data', } })
-  .then(function (response) {
-    dispatcher.dispatch({
-      type: "CREATE_TOURPACKAGE",
-      tourPackage: response.data,
-    });
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
 }
 
 export function login(data) {
@@ -291,19 +121,133 @@ export function sign_up(data) {
   });
 }
 
-export function getAdvertisements(data, categoryId) {
-  axios.get(server + '/advertisements?page='+data.page+'&category_id='+categoryId)
+export function getBlogs(data) {
+  axios.get(server + '/blogs?page='+data.page)
   .then(function (response) {
     console.log(response);
     dispatcher.dispatch({
-      type: "SHOW_ADVERTISEMENTS",
-      advertisements: response.data,
+      type: "SHOW_BLOGS",
+      blogs: response.data,
     });
   })
   .catch(function (error) {
     console.log(error);
   });
 }
+
+export function getTourPackages(data) {
+  axios.get(server + '/tour_packages?page='+data.page)
+  .then(function (response) {
+    console.log(response);
+    dispatcher.dispatch({
+      type: "SHOW_TOURPACKAGES",
+      tourPackages: response.data,
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function getTour(id) {
+  axios.get(server + '/tour/'+id)
+  .then(function (response) {
+    console.log(response);
+    dispatcher.dispatch({
+      type: "SHOW_TOUR",
+      tour: response.data,
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function getBlog(id) {
+  axios.get(server + '/blog/'+id)
+  .then(function (response) {
+    console.log(response);
+    dispatcher.dispatch({
+      type: "SHOW_BLOG",
+      blog: response.data,
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+
+export function getTourPackage(id) {
+  axios.get(server + '/tour_package/' + id)
+  .then(function (response) {
+    dispatcher.dispatch({
+      type: "SHOW_TOURPACKAGE",
+      tourPackage: response.data,
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function createReservation(data) {
+axios.post(server + '/reservation', data,  { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + data.token }} )
+  .then(function (response) {
+    console.log(response);
+    dispatcher.dispatch({
+      type: "CREATE_RESERVATION",
+      result: response.data,
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function getReservations(id, token) {
+axios.get(server + '/tour_reservations/'+id, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token }} )
+  .then(function (response) {
+    console.log(response);
+    dispatcher.dispatch({
+      type: "ALL_RESERVATIONS",
+      result: response.data,
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function getVerifiedReservations(id, token) {
+axios.get(server + '/verified_reservations/'+id, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token }} )
+  .then(function (response) {
+    console.log(response);
+    dispatcher.dispatch({
+      type: "ALL_RESERVATIONS",
+      result: response.data,
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function getMyReservations(token) {
+axios.get(server + '/my_reservations', { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token }} )
+  .then(function (response) {
+    console.log(response);
+    dispatcher.dispatch({
+      type: "MY_RESERVATIONS",
+      result: response.data,
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+
 
 export function getMyPins(token) {
   axios.get(server + '/my_pins',  { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token }})
@@ -441,6 +385,38 @@ export function deleteAdvertisement(id, token) {
   });
 }
 
+
+
+export function deleteReservation(passenger_id, tour_id ,token) {
+  axios.get(server + '/delete_reservation/'+ tour_id + '?passenger_id=' + passenger_id, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token }})
+  .then(function (response) {
+    console.log(response);
+    dispatcher.dispatch({
+      type: "ALL_RESERVATIONS",
+      result: response.data,
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+export function verfiyReservation(tour_id ,token) {
+  axios.get(server + '/verify_reservation/'+ tour_id, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token }})
+  .then(function (response) {
+    console.log(response);
+    dispatcher.dispatch({
+      type: "RESERVATIONS_VERIFIED",
+      result: response.data,
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+}
+
+
+
 export function deletePhoto(id, token) {
   axios.get(server + '/delete_photo/' + id, { headers: {'Content-Type': 'application/json', 'Authorization': "bearer " + token }})
   .then(function (response) {
@@ -454,9 +430,6 @@ export function deletePhoto(id, token) {
     console.log(error);
   });
 }
-
-
-
 
 
 export function loadAdvertisements(data) {
@@ -529,20 +502,4 @@ export function getProvinces(token) {
   .catch(function (error) {
     console.log(error);
   });
-}
-
-
-
-
-export function reloadTodos() {
-  axios("https://talaikis.com/api/quotes/random/").then((response) => {
-    console.log("got the data!", response);
-    dispatcher.dispatch({type: "RECEIVE_TODOS", todos: [
-      {
-        id: 8484848484,
-        text: response["data"]["author"],
-        complete: false
-      }
-    ]});
-  })
 }

@@ -129,7 +129,6 @@ export default class SignUp extends React.Component {
             <img src={logo} alt="Logo" className="logo" />
           </NavTitle>
         </Navbar>
-        <LoginScreenTitle>{dict.sign_up}</LoginScreenTitle>
         <List form>
           <ListInput
             label={dict.username}
@@ -187,13 +186,11 @@ export default class SignUp extends React.Component {
         </List>
 
         <Toolbar tabbar labels color="blue" bottomMd={true}>
-          <Link href="/categories/0"><i class="f7-icons">data_fill</i></Link>
-          <Link href="/new_cam_advert/"><i class="f7-icons">add_round_fill</i></Link>
-          <Link href="/"><i class="icon f7-icons">home_fill</i></Link>
+          <Link href="/blogs/"><i class="f7-icons">book</i></Link>
+          <Link href="/"><i class="icon f7-icons">world</i></Link>
           <Link href="/login/">
             <i class="icon f7-icons ios-only">
               person_round
-              <span class="badge color-red">{this.state.unseens}</span>
             </i>
           </Link>
         </Toolbar>

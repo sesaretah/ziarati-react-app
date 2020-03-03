@@ -182,16 +182,16 @@ background-color: inherit !important;
 
 
 .ios .navbar {
-  background: #4972ec;
+  background: #9db79b;
 }
 
 .ios .toolbar:not(.messagebar).color-blue {
-  background: #4972ec;
+  background: #9db79b;
 }
 
 .searchbar {
   width: 90%;
-  background: #4972ec !important;
+  background: #9db79b !important;
 }
 .price {
   float: left;
@@ -210,7 +210,7 @@ background-color: inherit !important;
 }
 
 .ios .searchbar:after {
-  background-color: #4972ec;
+  background-color: #9db79b;
 }
 
 .ios .navbar {
@@ -304,7 +304,7 @@ input:not(:focus):valid ~ .floating-label{
 }
 
 .text-muted {
-  font-size: 8pt;
+  font-size: 9pt;
 color: #717171;
 font-style: oblique;
 }
@@ -328,4 +328,21 @@ font-size: 16px;
 }
 .mh-30 {
 min-height: 30px !important;
+}
+
+.ios .button.color-green.button-fill, .ios .button.color-green.button-fill-ios {
+    background: #5eba00;
+    border-color: transparent;
+}
+
+.mt-5 {
+  margin-top: 5px;
+}
+.nowrp {
+  white-space: nowrap;
+}
+
+.block img {
+  width: 100%;
+  height: auto;
 }

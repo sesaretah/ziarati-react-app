@@ -25,7 +25,7 @@ import {
 } from 'framework7-react';
 
 import * as MyActions from "../../actions/MyActions";
-import TourPackageStore from "../../stores/TourPackageStore";
+import BlogStore from "../../stores/BlogStore";
 import MessageStore from "../../stores/MessageStore";
 import CategoryStore from "../../stores/CategoryStore";
 import { dict} from '../Dict';
@@ -41,16 +41,14 @@ export default class HomePage extends React.Component {
 
   constructor() {
     super();
-    this.getTourPackages = this.getTourPackages.bind(this);
-    this.getUnseens = this.getUnseens.bind(this);
-    this.getCategory = this.getCategory.bind(this);
+    this.getBlogs = this.getBlogs.bind(this);
     if (window.cordova){
       var uuid = window.device.uuid
     } else {
       var uuid = ''
     }
     this.state = {
-      tourPackages: '',
+      blogs: '',
       token: window.localStorage.getItem('token'),
       unseens: 0,
       query: '',
@@ -64,45 +62,31 @@ export default class HomePage extends React.Component {
   }
 
   componentWillMount() {
-    TourPackageStore.on("show_tour_packages", this.getTourPackages);
-    TourPackageStore.on("load", this.getTourPackages);
-    MessageStore.on("unseens", this.getUnseens);
-    CategoryStore.on("show_category", this.getCategory);
+    BlogStore.on("show_blogs", this.getBlogs);
+    BlogStore.on("load", this.getBlogs);
   }
 
   componentWillUnmount() {
-    TourPackageStore.removeListener("show_tour_packages", this.getTourPackages);
-    TourPackageStore.removeListener("load", this.getTourPackages);
-    MessageStore.removeListener("unseens", this.getUnseens);
-    CategoryStore.removeListener("show_category", this.getCategory);
+    BlogStore.removeListener("show_blogs", this.getBlogs);
+    BlogStore.removeListener("load", this.getBlogs);
   }
 
   componentDidMount(){
-    MyActions.getTourPackages(this.state);
-    MyActions.getAllUnseens(this.state.token);
-    if (window.cordova){
-      MyActions.updateFCM(this.state.token, this.state.uuid);
-    }
-
+    MyActions.getBlogs(this.state);
   }
 
-  getCategory(){
-    this.setState({
-      categories: CategoryStore.getAll(),
-    });
-  }
 
-  getTourPackages() {
-    var tourPackages = TourPackageStore.getAll()
-    if (tourPackages.length > 0){
+  getBlogs() {
+    var blogs = BlogStore.getAll()
+    if (blogs.length > 0){
       this.setState({
-        tourPackages: tourPackages,
+        blogs: blogs,
         noResult: false,
         showPreloader: false
       });
     } else {
       this.setState({
-        tourPackages: tourPackages,
+        blogs: blogs,
         noResult: true,
         showPreloader: false
       });
@@ -132,42 +116,18 @@ export default class HomePage extends React.Component {
     });
   }
 
-  createCard() {
-    var length = this.state.tourPackages.length;
-    var rows =  Math.floor(length/2);
-    var remainder = length % 2;
-    let item = []
-
-    for (let i = 0; i < rows + 1; i++) {
-      let children = []
-      if ( i != rows){
-        for (let j = 0; j < 2; j++) {
-          var obj = this.state.tourPackages[i*2+j]
-          children.push(<Col width="50" className="col-center">{<AdvertCard obj={obj}></AdvertCard>}</Col>)
-        }
-      } else{
-        for (let j = 0; j < remainder; j++) {
-          var obj = this.state.tourPackages[i*2+j]
-          children.push(<Col width="50" className="col-center">{<AdvertCard obj={obj}></AdvertCard>}</Col>)
-        }
-      }
-      item.push(<Row noGap>{children}</Row>)
-    }
-    return item
-  }
-
   createItem(){
-    var length = this.state.tourPackages.length;
+    var length = this.state.blogs.length;
     let items = []
     for (let i = 0; i < length; i++) {
       items.push(<ListItem
-        link={'/tour_packages/' + this.state.tourPackages[i].id}
-        title={this.state.tourPackages[i].title}
+        link={'/blog/' + this.state.blogs[i].id}
+        title={this.state.blogs[i].title}
         after=""
         subtitle=""
-        text={this.state.tourPackages[i].content}
+        text={this.state.blogs[i].content}
         >
-        <img slot="media" src={this.state.tourPackages[i].cover} width="80" />
+        <img slot="media" src={this.state.blogs[i].cover} width="80" />
         <span class="price text-muted"></span>
       </ListItem>);
     }
@@ -180,25 +140,11 @@ export default class HomePage extends React.Component {
     });
   }
 
-  category(){
-    if (this.state.categories && this.state.categories[0]){
-      return(<div>
-        <Link onClick={() => this.$f7router.navigate('/categories/' + this.state.categories[0].parent_id)}>
-          <i class="f7-icons">chevron_right</i>
-          <div class='custom-category'>{dict.back}</div>
-      </Link>
-        <div class='custom-category'>{dict.category}: {this.state.categories[0].title}</div>
-      </div>);
-    }
-  }
-
   blankResult() {
     if (this.state.noResult){
       return(<Block strong>{dict.no_result}</Block>);
     }
   }
-
-
 
   render() {
 
@@ -228,10 +174,7 @@ export default class HomePage extends React.Component {
             <img src={logo} alt="Logo" className="logo" />
           </NavTitle>
         </Navbar>
-        <Block>
-          {this.category()}
-        </Block>
-        {this.blankResult()}
+
         <List mediaList>
           {this.createItem()}
         </List>
